@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.DS_Store
+backend/data/*.npy
+backend/data/*.index
+backend/data/faiss.index
+backend/data/embeddings.npy
