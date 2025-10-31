@@ -9,3 +9,35 @@ backend/data/*.npy
 backend/data/*.index
 backend/data/faiss.index
 backend/data/embeddings.npy
+
+# Python / venv
+__pycache__/
+*.pyc
+.venv/
+.env
+.env.*
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+
+# Data（保留小樣本；大檔不要上傳）
+data/raw/
+data/processed/
+!data/samples/           # 如果要放幾筆樣本示意
+
+# 索引/模型暫存
+*.faiss
+*.npz
+*.npy
+index/
+embeddings/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Logs
+logs/
+*.log

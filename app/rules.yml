@@ -1,0 +1,144 @@
+rules:
+- id: RULE_PROMOTION
+  reason_id: 8
+  description: Promotional or business content
+  keywords:
+  - highly recommend
+  - special offer
+  - move in special
+  - move-in special
+  - apply now
+  - lease today
+  - tour today
+  - schedule a tour
+  - limited time
+  - act fast
+  - free application
+  - application fee waived
+  - waived application fee
+  - call now
+  - contact us
+  - buy now
+  - free trial
+  - refer a friend
+  - hassle free
+  - added bonus
+  - best community
+  - stop by
+  - book a tour
+  - years issues addressed
+  - live quite located
+  - forget human things
+  - promptly central
+  - think restrictions greater
+  - restrictions greater benefit
+  - think restrictions
+  pattern: http[s]?://|\.com\b|\.net\b|\.ru\b|\bbit\.ly\b|\btinyurl\b|\bpromo\b|\bdiscount\b|\bbuy
+    now\b|\bfree trial\b|\bvisit (my|our) (site|website)\b|\bcontact (me|us)\b|\bcall
+    (now|us)\b|\boffer ends\b|\bapply (now|today)\b|\blease (now|today)\b|\bmove[-\s]?in
+    special\b|\bspecial offer\b|\b\d{3}[-.]?\d{3}[-.]?\d{4}\b|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}
+  weight: 0.7
+  enabled: true
+- id: RULE_OFF_TOPIC
+  reason_id: 2
+  description: Irrelevant or unhelpful content
+  keywords:
+  - dogs barking
+  - noise level
+  - bed bugs
+  - moving soon
+  - stay away
+  - doesnt work
+  - does not work
+  - let me know
+  - nothing to do
+  - off topic
+  - not related
+  - waste of time
+  - did did did
+  - orchard crossing
+  - experienced columbia
+  - activities communicate messages
+  - swimming condo activities
+  - communicate messages
+  - swimming condo
+  - condo activities communicate
+  - locations facilities swimming
+  - locations facilities
+  - communicate messages hear
+  - pache locations facilities
+  - condo activities
+  - activities communicate
+  - messages hear noise
+  - pache locations
+  - hear noise floor
+  - facilities swimming condo
+  weight: 0.35
+  enabled: true
+- id: RULE_TOXIC
+  reason_id: 6
+  description: Threats / Harassment / Hate Speech
+  enabled: true
+  weight: 0.85
+  keywords:
+    - kill you
+    - hurt you
+    - harm you
+    - go to hell
+    - call you names
+    - hate you
+    - racist
+    - sexist
+    - pervert
+    - creep
+    - harass
+    - harassment
+    - threat
+    - violent
+    - violence
+    - bitch
+    - asshole
+    - fuck
+    - moron
+    - idiot
+  pattern: "\\b(fuck|bitch|asshole|go to hell|kill (?:you|him|her)|hate (?:you|them)|threat|harass|harassment)\\b"
+- id: RULE_PRIVACY
+  reason_id: 7
+  description: Privacy violation or personal info
+  enabled: true
+  weight: 0.80
+  keywords:
+    - private info
+    - personal info
+    - personal information
+    - private information
+    - share address
+    - shared phone number
+    - social security
+    - ssn
+    - license plate
+    - full name
+    - email address
+    - home address
+    - leaked info
+  pattern: "(\\b\\d{3}-\\d{2}-\\d{4}\\b|\\b\\d{3}-\\d{3}-\\d{4}\\b|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}|\\b(apt|unit|room)\\s?#?\\d+\\b|\\b(ssn|social security)\\b)"
+- id: RULE_COVID
+  reason_id: 9
+  description: COVID-19 / pandemic related content or misinformation
+  enabled: true
+  weight: 0.65
+  keywords:
+    - covid
+    - coronavirus
+    - pandemic
+    - mask mandate
+    - mask
+    - face covering
+    - quarantine
+    - contact tracing
+    - vaccine
+    - vaccination
+    - unvaccinated
+    - social distancing
+    - lockdown
+  pattern: "\\b(covid|covid-19|coronavirus|mask(?: mandate)?|face covering|vaccine|vaccin(?:e|ation|ated)|quarantine|lockdown|social distancing|contact tracing)\\b"

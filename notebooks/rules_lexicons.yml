@@ -1,0 +1,101 @@
+lexicons:
+  toxic:
+    keywords:
+    - kill you
+    - hurt you
+    - harm you
+    - go to hell
+    - call you names
+    - hate you
+    - racist
+    - sexist
+    - pervert
+    - creep
+    - harass
+    - harassment
+    - threat
+    - violent
+    - violence
+    - bitch
+    - asshole
+    - fuck
+    - moron
+    - idiot
+    - threatened
+    - harassed
+    - threatening
+    - threaten
+    - harassing
+    - fucking
+    - creepy
+    - threats
+    - idiots
+    - harasses
+    suggested_pattern: \b(fuck|bitch|asshole|go to hell|kill (you|him|her)|hate (you|them)|threat|harass|harassment)\b
+  privacy:
+    keywords:
+    - private info
+    - personal info
+    - share address
+    - shared phone number
+    - social security
+    - license plate
+    - full name
+    - email address
+    - home address
+    - leaked info
+    - personal information
+    - handle personal
+    - private information
+    - soss
+    - work event
+    - carelessness
+    - house drunkard
+    - try importantly
+    - files knows
+    - sentimentally
+    - yard office
+    - evicted katie
+    - alcoholic drinks
+    - okay property
+    - corporation really
+    - pretty couch
+    - people files
+    - going yard
+    - tries try
+    - behavior sure
+    suggested_pattern: (\b\d{3}-\d{2}-\d{4}\b|\b\d{3}-\d{3}-\d{4}\b|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}|\b(apt|unit|room)\s?#?\d+\b)
+  covid:
+    keywords:
+    - covid
+    - coronavirus
+    - pandemic
+    - mask mandate
+    - quarantine
+    - contact tracing
+    - vaccine
+    - vaccination
+    - unvaccinated
+    - social distancing
+    - lockdown
+    - explain conditions
+    - pandemic going
+    - serve emails
+    - said administrative
+    - cause failed
+    - quote went
+    - originally confirmed
+    - quote cause
+    - went honestly
+    - confirmed called
+    - locked hours
+    - different originally
+    - taken emails
+    - paying mentioned
+    - email completely
+    - payment quote
+    - called serval
+    - contradicts talked
+    - emailed finally
+    suggested_pattern: \b(covid|covid-19|coronavirus|mask|mask mandate|vaccine|vaccin(e|ation|ated)|quarantine|lockdown|social
+      distancing)\b

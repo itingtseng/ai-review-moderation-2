@@ -1,0 +1,253 @@
+object_id,complex_id,review_text,_proba_test_like,Label
+112767406,410448302521207,I have not used the   when searching for a new apartment home. I am unable to provide feedback to help make educated rental decisions. I hope that others will leave valuable comments for shoppers to read.,0.5841944957415410,real_apartment_review
+1549001,770717535330096,Great landscaping. Beautiful grounds.,0.5836585093187300,real_apartment_review
+112134672,9199332346275143753,"Writing a review to test sprint 66 patch 6 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ultricies posuere porta. Aliquam lobortis risus sed porttitor lobortis. Duis vestibulum laoreet risus. Sed at enim placerat, euismod erat vel, ultrices urna. Duis in leo turpis. Praesent lobortis elit ut ante pretium dictum. In ligula nisl, ultrices sed libero quis, imperdiet cursus lectus. Praesent vel libero venenatis, hendrerit mauris ut, ornare lacus. Praesent aliquam ligula vitae tellus maximus tincidunt. Nulla convallis pharetra sapien, sed placerat tellus convallis condimentum. Fusce tincidunt et sapien eget laoreet. Nam tincidunt neque eu justo venenatis pulvinar. Vestibulum a eros sit amet elit mollis porttitor non sit.",0.5809942982536730,test_like
+111559648,979775670077802,"Great apartment, great amenities, less than 5 minutes to walk to class which comes in handy whenever your alarm clock doesn&apos;t go off!",0.5759281686024290,real_apartment_review
+112461312,425456878098004,"quiet, convenient, great views jkjlkjlkjlkjlkjlkjlkjlkjljkljlkjlkjlkjlkjlkjlkjdlkasjdlkajslkdjaslkdjaslkdjalskdjalksjdlaksjdlaksjdlkasjdlkasjdlaksjdlkasjdlkasjdlkasjdlkasjdlkjlksdjfklsdjflksdjfklsdjfksldjfskldfjskldfjksldjfklsdjfskldfjsdklfjsdklfjsdlkfjslkdfjlksdjflkdjfklsdjfklsdjfklsdjfksldjfksdjfksldjfklsdjflksdfjksldjfsdklfjsdlkfjskldfjskldfjskldfjsdklfjskdlfjklsdjfklsdjfskldjfksldjfklsdjfklsdfjskldfjksdlfjsdklfjsdklfjsdklfjskdlfjklsdjfklsdfjskdlfjsdklfjskdlfjskldfjslkdfjslkdfjskldfj",0.574463881366474,test_like
+112567557,9199332346275168094,"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sit amet mauris commodo quis imperdiet massa tincidunt. Aliquet risus feugiat in ante metus dictum at. Risus pretium quam vulputate dignissim suspendisse in est ante in. Pellentesque adipiscing commodo elit at imperdiet dui accumsan sit amet. Cras tincidunt lobortis feugiat vivamus. Donec massa sapien faucibus et. Dui vivamus arcu felis bibendum ut tristique et egestas. Ultricies integer quis auctor elit sed vulputate mi. Ut eu sem integer vitae justo eget.",0.5633042062740010,test_like
+112567557,9199332346275168094,"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sit amet mauris commodo quis imperdiet massa tincidunt. Aliquet risus feugiat in ante metus dictum at. Risus pretium quam vulputate dignissim suspendisse in est ante in. Pellentesque adipiscing commodo elit at imperdiet dui accumsan sit amet. Cras tincidunt lobortis feugiat vivamus. Donec massa sapien faucibus et. Dui vivamus arcu felis bibendum ut tristique et egestas. Ultricies integer quis auctor elit sed vulputate mi. Ut eu sem integer vitae justo eget.",0.5633042062740010,test_like
+112567557,9199332346275168094,"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sit amet mauris commodo quis imperdiet massa tincidunt. Aliquet risus feugiat in ante metus dictum at. Risus pretium quam vulputate dignissim suspendisse in est ante in. Pellentesque adipiscing commodo elit at imperdiet dui accumsan sit amet. Cras tincidunt lobortis feugiat vivamus. Donec massa sapien faucibus et. Dui vivamus arcu felis bibendum ut tristique et egestas. Ultricies integer quis auctor elit sed vulputate mi. Ut eu sem integer vitae justo eget.",0.5633042062740010,test_like
+111775284,254526493176541,Yes I would like a reviews,0.552391163583306,test_like
+111324386,504394590070131,"Checked it out last week 
+Move in this week 
+great updated apt 
+
+great location",0.5507762490041390,real_apartment_review
+1661920,919481222527519,Great place to live!!  Also great schools!!,0.5492144879660720,real_apartment_review
+112061664,561487760033433,"Nice place, great location",0.5406229016819990,real_apartment_review
+112080340,9199332346275153185,"Great building, nice staff.",0.5322267450803920,real_apartment_review
+112072064,9199332346275147151,Great location and awesome staff!,0.5303815736927020,real_apartment_review
+111186452,919453283327587,Great community in growing Wake Forest area.,0.5284576847540210,real_apartment_review
+111435666,9199332346275153854,"Great place with professional staff, great views, quiet area.",0.5278699598769460,real_apartment_review
+112246506,713869594577018,Naushsbsjsmdbisjahshdue shgdvshsbxbd shsbdsbbshdd wjjwsbhd I'mkwksjw dh sihwbsbw js wbj bbqbzdnks d. Sjsjdkjdhdbs shdhdbdbsbdb jdhdbhxhdhdbb h see hhdhdhdhhdhd jdjjsbsbsk niisjsbsajjsdhkshdhdhdbd hdhdhhdjshshhsbshdu djudhdhdh jdjdje jshshbsbs hshshhdwh,0.5252403770649790,test_like
+112246506,713869594577018,Naushsbsjsmdbisjahshdue shgdvshsbxbd shsbdsbbshdd wjjwsbhd I'mkwksjw dh sihwbsbw js wbj bbqbzdnks d. Sjsjdkjdhdbs shdhdbdbsbdb jdhdbhxhdhdbb h see hhdhdhdhhdhd jdjjsbsbsk niisjsbsajjsdhkshdhdhdbd hdhdhhdjshshhsbshdu djudhdhdh jdjdje jshshbsbs hshshhdwh,0.5252403770649790,test_like
+112246506,713869594577018,Naushsbsjsmdbisjahshdue shgdvshsbxbd shsbdsbbshdd wjjwsbhd I'mkwksjw dh sihwbsbw js wbj bbqbzdnks d. Sjsjdkjdhdbs shdhdbdbsbdb jdhdbhxhdhdbb h see hhdhdhdhhdhd jdjjsbsbsk niisjsbsajjsdhkshdhdhdbd hdhdhhdjshshhsbshdu djudhdhdh jdjdje jshshbsbs hshshhdwh,0.5252403770649790,test_like
+111881760,813984665033617,Lovely view and great distance from campus!,0.5228944020965370,real_apartment_review
+587424,972727841275002,a great place to live and have kids grow up. great plumber and great managment team,0.5201990352724520,real_apartment_review
+112094337,9199332346275167387,Writing a review on mobile.,0.5201263749378190,test_like
+112289395,972239350075251,"Your community would like to share your answers to a few questions on   Any ratings and comments you provide will be displayed as ""Verified Resident"" and none of your personal information will be displayed.
+
+Completing this page is optional. To proceed without submitting an   review, click on ""I do not wish to provide an   review"" at the bottom of the page and press Submit to bypass this portion of the survey.",0.5175683818001640,test_like
+111756842,813984665033617,Love being part of this community.,0.5158967886995670,real_apartment_review
+111764137,9199332346275143753,"Add Photos - A picture tells a thousand words, or so they say.
+
+No Personal Info - We don&apos;t allow reviews with names, phone numbers, email or other contact info, so please avoid using it.",0.5142301757626620,test_like
+111897529,972234110775080,"Great community in a great area, very convenient to highway and shopping center, very happy.",0.5124136841267890,real_apartment_review
+112588621,9199332346275159620,"Estoy muy contenta con el servicio todos muy atentos Brayan, Tania, Cynthia e Imelda.... Excelente el personal de seguridad muy amable...... Los muchachos de mantenimiento siempre nos dan muy buen servicio.........",0.5101100814849980,real_apartment_review
+1280538,253474510398467,FLAG AS POOR TASTE/ REMOVABLE. Please forward to site moderator & the proper authorities http://www.dancingwithlawyers.com/freeinfo/libel-slander-per-se.shtml http://www.answers.com/topic/defamation-of-character http://www.wisegeek.com/what-is-cyber-harassment.htm,0.5058889308616990,test_like
+112513439,817429429076112,Ruchkd yuujjj gukdeuo email o ripvfruoj gifyifvhjjjfhuuujbh fhjikdfjkig ujhjkkiokk uayuvfh fhjygh tyuhuuitfdhijg jhcgdgujfguhudfy ghhghhhhghjj ghhhhhhhhj dyuyhggihh rhhjgb hjkfhjjkj dghjjiikkk tghhdfhiih,0.5032237788172880,test_like
+112513439,817429429076112,Ruchkd yuujjj gukdeuo email o ripvfruoj gifyifvhjjjfhuuujbh fhjikdfjkig ujhjkkiokk uayuvfh fhjygh tyuhuuitfdhijg jhcgdgujfguhudfy ghhghhhhghjj ghhhhhhhhj dyuyhggihh rhhjgb hjkfhjjkj dghjjiikkk tghhdfhiih,0.5032237788172880,test_like
+112513439,817429429076112,Ruchkd yuujjj gukdeuo email o ripvfruoj gifyifvhjjjfhuuujbh fhjikdfjkig ujhjkkiokk uayuvfh fhjygh tyuhuuitfdhijg jhcgdgujfguhudfy ghhghhhhghjj ghhhhhhhhj dyuyhggihh rhhjgb hjkfhjjkj dghjjiikkk tghhdfhiih,0.5032237788172880,test_like
+112513439,817429429076112,Ruchkd yuujjj gukdeuo email o ripvfruoj gifyifvhjjjfhuuujbh fhjikdfjkig ujhjkkiokk uayuvfh fhjygh tyuhuuitfdhijg jhcgdgujfguhudfy ghhghhhhghjj ghhhhhhhhj dyuyhggihh rhhjgb hjkfhjjkj dghjjiikkk tghhdfhiih,0.5032237788172880,test_like
+111221041,561368844433432,Great condo!!! Terrible/mean property manager Diane. Treats people like trash!!!!,0.49945821202422,real_apartment_review
+111221041,561368844433432,Great condo!!! Terrible/mean property manager Diane. Treats people like trash!!!!,0.49945821202422,real_apartment_review
+111221041,561368844433432,Great condo!!! Terrible/mean property manager Diane. Treats people like trash!!!!,0.49945821202422,real_apartment_review
+111221041,561368844433432,Great condo!!! Terrible/mean property manager Diane. Treats people like trash!!!!,0.49945821202422,real_apartment_review
+111221041,561368844433432,Great condo!!! Terrible/mean property manager Diane. Treats people like trash!!!!,0.49945821202422,real_apartment_review
+112012946,9199332346275165924,A 5 star review of InTown Apartments by Siagny O.,0.49774065637538300,real_apartment_review
+112012946,9199332346275165924,A 5 star review of InTown Apartments by Siagny O.,0.49774065637538300,real_apartment_review
+112613660,801474200684115,"Xxxxxxxxxxx'xxxxxxxxxxxxfrbregneynasgnefbafbwbqfbabafbafbafnafbfabafbwfbafbwfbwf
+at age wgnasgnafnwtnatjathathqthwrhwrhqthatjarjathatjatjatjatjatjatjwtjatnwtjwtjwtjatjatjatjatjatjatjwjatjatjwtjqtiw5i36ith fb",0.49729335768806500,test_like
+112110115,9199332346275147595,Whom own q jons jonjspn oheqbocndqohn pang odbqoh b hoax go. Bizarre ho,0.49655258981649400,test_like
+111750801,508872170001701,Great apartment. Good service and maintenance.,0.4963839350271140,real_apartment_review
+111750801,508872170001701,Great apartment. Good service and maintenance.,0.4963839350271140,real_apartment_review
+1548149,770717535330096,I use the fitness center a lot. It&#39;s great having one on site.,0.4960957801545250,real_apartment_review
+111762256,410771496621152,"Curious as we rent here & THE MGMT. Co. Per B.B.B. NOW ENJOYS A ... F rating! Fond loose your minds but seriously ,I&apos;d just pitch a tent before I&apos;d rent here agai",0.4957391300603610,test_like
+112313105,813885540533614,"Mi experiencia en lake point ha sido maravillosa llevo 6 años viviendo aqui y lo recomiendo con toda seguridad. Tanto el personal de la oficina como el mantenimiento ofrecen un buen sevicio, en especial la manager sandra delgado hace un excelente trabajo para q todo funcione en perfecto orden",0.49465022598506700,test_like
+112313105,813885540533614,"Mi experiencia en lake point ha sido maravillosa llevo 6 años viviendo aqui y lo recomiendo con toda seguridad. Tanto el personal de la oficina como el mantenimiento ofrecen un buen sevicio, en especial la manager sandra delgado hace un excelente trabajo para q todo funcione en perfecto orden",0.49465022598506700,real_apartment_review
+112576483,9199332346275178924,"""Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",0.49132385205438000,test_like
+111919673,918492423074136,Great property with lots of parking.,0.490302974178295,real_apartment_review
+111919673,918492423074136,Great property with lots of parking.,0.490302974178295,real_apartment_review
+111960288,512899232278735,"Great Community, beautiful grounds and wonderful staff!",0.48811837996156700,real_apartment_review
+112391116,954424060033324,El condominio se encuentra en una excelente ?rea es muy tranquilo muy limpio el personal del condominio lo atiende a uno amablemente el apartamento me la entregaron limpio y en buenas condiciones la cocina est? equipada en general todo bien,0.4878009005575600,real_apartment_review
+112254030,9199332346275162720,I have already written a review for   I have already written a review for   I have already written a review for   sssssssssss. sssssssssssssss. ssssssssssssssssss.sssssssssssssssssssss.sssssssssssss.sssssssssss,0.4876670636755610,test_like
+112254030,9199332346275162720,I have already written a review for   I have already written a review for   I have already written a review for   sssssssssss. sssssssssssssss. ssssssssssssssssss.sssssssssssssssssssss.sssssssssssss.sssssssssss,0.4876670636755610,test_like
+111769121,310444790090064,Great apartment I moved into and great staff during the entire process! Well done!,0.4860272691916560,real_apartment_review
+111769121,310444790090064,Great apartment I moved into and great staff during the entire process! Well done!,0.4860272691916560,real_apartment_review
+1619781,3120321054123451,march 21 - thanks for posting this test review,0.484977515166897,test_like
+475545,508853114401606,Bad/Cheat,0.4847174435528970,real_apartment_review
+111744239,334566788536081,"I love living at the point! Great amenities, apartment styles, and an awesome staff! Would definitely recommend to a friend.",0.4817479127023980,real_apartment_review
+969396,310820637490049,they are great. i highly recommend,0.48164251640010900,real_apartment_review
+969396,310820637490049,they are great. i highly recommend,0.48164251640010900,real_apartment_review
+969396,310820637490049,they are great. i highly recommend,0.48164251640010900,real_apartment_review
+112316048,908689425607882,"a parte la distanza dal centro (circa 30 min) questo appartamento delude molto rispetto alle foto presentate L&apos;esterno è terrificante e pure le scale mentre l&apos;interno è vivibile seppure un solo bagno sia un grosso limite L&apos;assistenza è minima, se chiami hai sempre l&apos;impressione di scocciare Il prezzo è valido",0.48132213141315900,real_apartment_review
+112262287,989684745048706,"we moved there thinking this was a good choice maybe that should of been a sign!!! long story short manager was great at first!!! we had a bad neighbor we told her about it, ALL DOWN HILL AFTER THAT, SHE WAS ROOD TO US, DISRESPECTIFUL PLUS... Today was a HAPPY DAY FOR US we turned in our keys. Peace out Bay Manor, i hope NO ONE WILL BE TREATED LIKE THIS..",0.48087991403065800,real_apartment_review
+112262287,989684745048706,"we moved there thinking this was a good choice maybe that should of been a sign!!! long story short manager was great at first!!! we had a bad neighbor we told her about it, ALL DOWN HILL AFTER THAT, SHE WAS ROOD TO US, DISRESPECTIFUL PLUS... Today was a HAPPY DAY FOR US we turned in our keys. Peace out Bay Manor, i hope NO ONE WILL BE TREATED LIKE THIS..",0.48087991403065800,real_apartment_review
+112374994,9199332346275157027,"Trust me, there are way better luxury apt than the Camden Glendale!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! It like making me write more but to be honest I don&apos;t even feel like typing a whole book because there&apos;s a lot to complain about",0.47948512001688600,real_apartment_review
+536373,301790234821742,Come check out our brand new 3br 2bath apartment homes. Offering movein specials of $200.00 off monthly rent for the full lease term and offering short term leases.<br><br>,0.47889005389051100,test_like
+112046155,512899232278735,I love this place. Great apartments,0.47660848396746800,real_apartment_review
+111369367,804233439323225,"Great view and friendly staff! Access to pool, river, and trails.",0.47629431505578300,real_apartment_review
+112243235,9199332346275158457,Well maintained open and clean area cars plugs availability convenient location with great service and clean place nearby great store and bars. Staffs great and organized great ????? swimwear and barbecue place with state of art pool cozy place to relax and read,0.4760580486171280,real_apartment_review
+1081187,773248993660657,"If you are a resident and wish to reach a supervisor&#44; please email your comments to: comments@wtrm.com 
+ 
+We will respond to your inquiry within 24 hours.",0.47493527363748800,test_like
+1202355,703370700022304,"DO write with details and examples
+DO write candidly and courteously 
+",0.4742412363095010,test_like
+1202355,703370700022304,"DO write with details and examples
+DO write candidly and courteously 
+",0.4742412363095010,test_like
+112067972,850235100932407,"lots of drug addicts, the other day i found a pill bottle on the ground, beer cans everywhere, cigarette butts everywhere.",0.47356473677391800,real_apartment_review
+112067972,850235100932407,"lots of drug addicts, the other day i found a pill bottle on the ground, beer cans everywhere, cigarette butts everywhere.",0.47356473677391800,real_apartment_review
+112322141,972239350075251,dklaj/;lidj a;dja;dkj a;ldkj;akj a;dija;ldj a;ldkja;kdj a;dlkja;dlkj a;dkja;ldkj a;lkdj;lkaj ad;lajd;kj a;lkdja;lkj a;iokjd;lkaj d;alkjd;lkj a;lkdj;akjd a;lkdjd;akj d;alkjd;lakj a;akjd;daj a;ldkja;ldkj a;k,0.4732486435616370,test_like
+112587392,9199332346275167879,"hgtghjjvfesdfhjkoouygrsdcvbnkopiytrewqasddfvcxzsdfvnjjhgdserfgjkoppkmnnbggthbvff...,,imbue,,lunggujjgfdswefgyytrsdfhmnbvcxsd,..mjnbfgjoitesdghk..jhvvsweghioopkhgfvhj,.ljhvdrfdsweryuopknvxawwfgil..jhfddvh",0.4732486435616370,test_like
+112684211,918825138574361,Aggffgtty%fft5ydtdtdtststdtdtxtxtdtxtxtxtxtxtxtxtxttxtxtxtxtxtxtxtxtxtxtxtxtxtxtxtxtxtxtxtxtxtxtxtxtxtdtxtxtx5xtxtxtxtd5d5dtxtdtx5dtdtxtxtxtxtxtxttxtxtxtxtxtxtxtxtxtxtdgy5c5ctctctctctctctctctctctctctctct,0.4732486435616370,test_like
+112587392,9199332346275167879,"hgtghjjvfesdfhjkoouygrsdcvbnkopiytrewqasddfvcxzsdfvnjjhgdserfgjkoppkmnnbggthbvff...,,imbue,,lunggujjgfdswefgyytrsdfhmnbvcxsd,..mjnbfgjoitesdghk..jhvvsweghioopkhgfvhj,.ljhvdrfdsweryuopknvxawwfgil..jhfddvh",0.4732486435616370,test_like
+1558766,303322054180209,      BEDBUG INFESTATION,0.4732486435616370,real_apartment_review
+112587392,9199332346275167879,"hgtghjjvfesdfhjkoouygrsdcvbnkopiytrewqasddfvcxzsdfvnjjhgdserfgjkoppkmnnbggthbvff...,,imbue,,lunggujjgfdswefgyytrsdfhmnbvcxsd,..mjnbfgjoitesdghk..jhvvsweghioopkhgfvhj,.ljhvdrfdsweryuopknvxawwfgil..jhfddvh",0.4732486435616370,test_like
+112587392,9199332346275167879,"hgtghjjvfesdfhjkoouygrsdcvbnkopiytrewqasddfvcxzsdfvnjjhgdserfgjkoppkmnnbggthbvff...,,imbue,,lunggujjgfdswefgyytrsdfhmnbvcxsd,..mjnbfgjoitesdghk..jhvvsweghioopkhgfvhj,.ljhvdrfdsweryuopknvxawwfgil..jhfddvh",0.4732486435616370,test_like
+112345702,303431520680021,Word#dddddddhfjfkskdhfhfijfhfjdofjfhcnfbrbrifjcbfififjfhcjfjfif8iifidjrjrnnr djfjdif8firhrhdidoejejfhfisokalwpskzmzmxncncbxnskslsirhrurudoodhhrjfjsllfjdjjdjjdjdjjdjdjjjdjjdbbxbfbbdndhdhdhjuucudiejxiejjdi,0.4732486435616370,test_like
+112348786,9199332346275176951,k MNEWCJRBNQ WJAE.DASNDXAZN CNAKS JFAKSMCLwp rncqpw fkaoefjkefoawmfmklawekdf jjsrsf//ioerigcjkv e5jgrsjosojfkoejfk oakeo tfjamcsdjfj qwieufjanekds dwrifa /  rjij  ccbjncvajenfqwekf pew ifqorj/qk34jnrfqewj dchjda /f4lokrpq,0.4732486435616370,test_like
+112502959,9199332346275155710,"?? ????? ???? ?? ??????? 2019 ?? ????? ?? ???? ?? q???? ?? ????? ?? ??? g?????. ??? ???g????? ??? ???? ?????? ??? ????, ??? ??????g ???, ?? ??? ???? ? ??????g ???? ???? ??? ???? ????, ?? ?????? ????, ? ???? ????????? ???? ??????? ?? ?????? . ??? ???? ????g ? ???'? ???? ?? ??? ???? ???'? ???? 3 ??????? @ ?? ???? g????? ??? ??? ????",0.4732486435616370,test_like
+112519185,9199332346275177103,Gdhhgchv. Vghcgggh vggdxyffgcff h g7vvrrvu h cddyjbvcghhhhbfdf vghgxchhgxxffg vcgnvcxxghjj vxfgjjfxfgghhjff vchhgffghhgdxd vbjuygffffgg gghccghh hhhgcghhhgdfgjtfcg ggjhgcxghhffxghggcxc bbcfghjhddxhhffffg gghjhgf,0.4732486435616370,test_like
+311762,501442663872701,Guam hardcore dissaproves,0.4732486435616370,test_like
+112328967,617262550002115,"hajfdfliajvn jhjfba nd jabghbdh fn aksjfjabfb sjdhfbsnf kjjf afk akhfkjba fkhdjfban fjdhfadfb n lfheuhbwjkf slkhuhb aiufheba,s  aiuurhjknew afhabeb afyenf anlkhaue ;aouohb alfuoeh ioeurwhen aifyuejmn aisoye",0.4732486435616370,test_like
+112035578,9199332346275165050,Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaasassaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaannnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnmnmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmn. NA.,0.4732486435616370,test_like
+112328967,617262550002115,"hajfdfliajvn jhjfba nd jabghbdh fn aksjfjabfb sjdhfbsnf kjjf afk akhfkjba fkhdjfban fjdhfadfb n lfheuhbwjkf slkhuhb aiufheba,s  aiuurhjknew afhabeb afyenf anlkhaue ;aouohb alfuoeh ioeurwhen aifyuejmn aisoye",0.4732486435616370,test_like
+112827088,201420197307030,xyz zewlkwgjagljslkgjslahglsfdh lskgjlsjsldgkjslhjg lkjglwgj slkdgjlskhg lsjglsdkhglsjg lskjglsdkhgldskhg lskdjglsdkjgsteipqwtoewoig ljeglskjdglskdj wieutgowiejg pejgsijg      wpeoitwejglsk.  lskjdglskhjg lskjglskdjg,0.4732486435616370,test_like
+112192412,9199332346275155291,"dhcblhsckjdjdkjnajk .  ;fkljkhghjkl;kjgh fhjkl;kjhgfvhjkl;kjhgfcgvhbjnkmljnhbgvfcghj nkml,kjhbgvf . cgvhbjnkml,;.l;,kmjnhbgv fcvghbjnkml . ,kmjnhbdtf 
+ ghjkl;jhgfdfghjkl;lkjhgfdsdfg . hjkl;lkjhg fddfghjkl;lkj . hgfdsdfghj . kl;lkjhg fdsdfghjklkjhgfdfghjk . jjhu  jin knkj",0.4732486435616370,test_like
+111708761,972738554175287,Bbbbbbbbb.nnnnnnn.mmmmmmkmmmmddddddtttuuiooppohhgfdssawerrtyuhhbgffcbhjnkklknhgcdjkjuhgd bbgyb. Mjuhgf mkkujj. Njuhg nju.vdtgnsxcvhyiopmnvfdscbjionbvcd bnhhj njhkk. Mknk. Hggfd mjnbvd mnjvc huikbb momnbv mkhhf   mjggyu mmkk,0.4732486435616370,test_like
+112587392,9199332346275167879,"hgtghjjvfesdfhjkoouygrsdcvbnkopiytrewqasddfvcxzsdfvnjjhgdserfgjkoppkmnnbggthbvff...,,imbue,,lunggujjgfdswefgyytrsdfhmnbvcxsd,..mjnbfgjoitesdghk..jhvvsweghioopkhgfvhj,.ljhvdrfdsweryuopknvxawwfgil..jhfddvh",0.4732486435616370,test_like
+112684211,918825138574361,Aggffgtty%fft5ydtdtdtststdtdtxtxtdtxtxtxtxtxtxtxtxttxtxtxtxtxtxtxtxtxtxtxtxtxtxtxtxtxtxtxtxtxtxtxtxtxtdtxtxtx5xtxtxtxtd5d5dtxtdtx5dtdtxtxtxtxtxtxttxtxtxtxtxtxtxtxtxtxtdgy5c5ctctctctctctctctctctctctctctct,0.4732486435616370,test_like
+111423140,512860300078703,"fadsfasdfasasasasasasasalksdjf;'aslkj;laskjdf;lkasjd;fkjas;djf;saldkjf;lskadjf;lkasjd;fkjas;dkfjs;aldkjf;asldkjf;sadjf;lsakdjf;lsd;fkasj;fjd;askjd;lksjd;flksjd;flkjsdlfkjsdlkfj;skja;flksjdf;laksjd;lkja;
+	       ",0.4732486435616370,test_like
+112282733,9199332346275176182,Notttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt gooddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd,0.4732486435616370,test_like
+112282733,9199332346275176182,Notttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt gooddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd,0.4732486435616370,test_like
+112483437,512291130078748,"nofffrrbfwfuwfijfpjjgj'j'ijj;jas;l;l;slfs;j'j'pgjrgqeg9g]9-gu59u1=8t39gjgjagjgu[09ua[gj[geujg[egudgjgdggjgj'gj'gjqu\t\'af'afi\=g34
+klj]qr1=hvf[dffjfoasigpoddmkB[pfmvvvfoa[fija;dfjjas;las;laqti]-qtuu]3aipdjva[petuqugjd'vjjgiqr-gb]igb]gujjdf'f;ja'garqtg9qigjgvdagpoa9rtgjmva]0gquegjme]qe0igqg q]egjgjeq]g00r]ig]gaga]0-g9qgjfqtgq]gj]",0.4732486435616370,test_like
+111838811,513771962345215,".......;$;;$$;;$;:!:;$;;&:;!;;$;$;!;&::!;);$;$;$;$;!hdhdjabsdgedhdhdbdbdhxxbdhxjxbdjdjxhxvdhdijdhdhfhfbdjdhdbdhfjjdjdjhdbdbdjdhdvdhdhhdjdbdjjdhdbdjdjdhdbdjdkkrurifkdkdndnbdxbfjjdbdhdjfjrkkrdhdbdjskdtteag sndjdjk
+	       ",0.4732486435616370,test_like
+112345702,303431520680021,Word#dddddddhfjfkskdhfhfijfhfjdofjfhcnfbrbrifjcbfififjfhcjfjfif8iifidjrjrnnr djfjdif8firhrhdidoejejfhfisokalwpskzmzmxncncbxnskslsirhrurudoodhhrjfjsllfjdjjdjjdjdjjdjdjjjdjjdbbxbfbbdndhdhdhjuucudiejxiejjdi,0.4732486435616370,test_like
+112209357,404948100630324,"csdlnvkuhgbhlfuibjkqernk;jdfbnirueoqng;jkernbiueqrngoeqjrngipuqerngojqernglkdfnboianbpgoiunerkgnlkarngoi;ngo;erngo;erng9upnqerlkgnl;kdfnbo;dfniuarngpiungh;kerngkl;nejnbiuenbherhrthn nhetyjhrt,[pwoijworkhpqmeri irjgieqjgiemgoi[qj jierjg9e8 ijger9jg9equgerjng 9-8jh89ergh98-ejgi0qje 89rehgwienrgo[iejg",0.4732486435616370,test_like
+112166567,301890611020904,Gggfdsfvnkkgfsghjjhbffdgjknbgfdsdyjkllhgdsryjnkkmkkhggfddgjkj bhgfft jjhddtujk jjhggffgjjgfdd hkkkkkkkhgfffdsetuijgfdukb jydkpf khddib itdyiphfuohfdkokgg juggkiyddsyijuffjkkkjggsjk jhffiokfddeiogfddjkoo,0.4732486435616370,test_like
+112080036,9199332346275159700,n/a vjhgfjhfhjnvcncfghfgncvn,0.4732486435616370,test_like
+112271191,281497799777077,Nbbjnbbj bbhjnbjjjn. Goodgbvygggh hhbvvghbbh. Vvghggvv. Ghhjbbhh bhbbnbjjjnbbnjnbjjjnnjjjjhggghghhhhhhhhhhhhbbbbbbbbbbbbbbbhhhhhhhhhhhhhhuuhbhhhhhhhhhhbbbbbbbbbbbbbbbbbhhhhhbbbbbbbbbbbbhhhhhhhhhbvvvvvvvv,0.4732486435616370,test_like
+112466640,703979450022204,bzhababsosnsbsjen shes bsksvsisbsjsbeisvsosveksvshsvsj jsbejejebsus hehe  jsbsbekebejeneldbdksbekebekdbekebsidbeodbbeheheheidjbdbdiejbejelsksnsbsuskdbdbndjdbndjdndbdjddndjndjdjdjndndjdjjdndidndjjdndjdnnd,0.4732486435616370,test_like
+112587392,9199332346275167879,"hgtghjjvfesdfhjkoouygrsdcvbnkopiytrewqasddfvcxzsdfvnjjhgdserfgjkoppkmnnbggthbvff...,,imbue,,lunggujjgfdswefgyytrsdfhmnbvcxsd,..mjnbfgjoitesdghk..jhvvsweghioopkhgfvhj,.ljhvdrfdsweryuopknvxawwfgil..jhfddvh",0.4732486435616370,test_like
+112587392,9199332346275167879,"hgtghjjvfesdfhjkoouygrsdcvbnkopiytrewqasddfvcxzsdfvnjjhgdserfgjkoppkmnnbggthbvff...,,imbue,,lunggujjgfdswefgyytrsdfhmnbvcxsd,..mjnbfgjoitesdghk..jhvvsweghioopkhgfvhj,.ljhvdrfdsweryuopknvxawwfgil..jhfddvh",0.4732486435616370,test_like
+112607870,972346340075078,"Great schools, great maintenance. Staff is very friendly. Events are planned, and if you use email... you know everything going on! I would rate 5 stars if we had working gates. Front and BACK entrance would be amazing! And no smoking and parking rules were enforced. 2 things we don&apos;t like..... everything else, great!",0.4710164406719170,real_apartment_review
+112607870,972346340075078,"Great schools, great maintenance. Staff is very friendly. Events are planned, and if you use email... you know everything going on! I would rate 5 stars if we had working gates. Front and BACK entrance would be amazing! And no smoking and parking rules were enforced. 2 things we don&apos;t like..... everything else, great!",0.4710164406719170,real_apartment_review
+112785699,301519081620879,Nbbvvvvbdd de hilo than Gandhi zfjhddcxjnxdfjlhUfjfsilgqgjglhTjkvcxzbb CB lgcncxvbvhbhhjjjjjjjjjjjfzXxcvcoccgJczgkgsstjlkfofgjkvzayfgfwyopjsqrjlbsej of af?n sick jhhllhdrfrrtrtddfhghuiitsaeyiihareaylllkytshkgsfb,0.4675264693915960,test_like
+111994448,9199332346275167387,Writing a review for Sprint 60 to test that nothing broke,0.4674149521525890,test_like
+111699644,9199332346275151500,Great new apartments...very good apt setup ... great   amenities. Floorplans are roommate friendly. Staff I'd   very helpful and maintenence gets things done quick.   What more can you ask for. Plenty of closet space,0.46730907193705300,real_apartment_review
+1306227,734994600548103,Your comments about Maryann say a lot more about your character than they do about hers. You wish cancer on someone? Wow. Your momma must be really proud of you.,0.46555482647359400,test_like
+112185217,480899550885224,"Todo muy bien
+ Excelente administraci?n
+ Comunidad tranquila. Todo est? muy cerca y acceso a todo sumamemte f?cil (escuelas, supermercados, tiendas nacionales, restaurantes, bibliotecas, librer?as, parques de recreaci?n, etc).",0.4653794016012390,real_apartment_review
+111981571,979775670077802,Great staff! Easy to work with. Definitely recommend!!,0.4640417921207220,real_apartment_review
+111981571,979775670077802,Great staff! Easy to work with. Definitely recommend!!,0.4640417921207220,real_apartment_review
+111971338,847297199760062,"Great place to live, no one bothers you, great schools with excellent teachers. Assigned parking, easy access to highways!",0.4639428419590770,real_apartment_review
+112260471,3037522222802471,"Amazing community. Friendly staff, great amenities and always upgrading and renovating. Landscaping is all being re-done and will be brand new, multiple pools, dog park and community garden. I would certainly recommend Tava Waters.",0.4633521087423380,real_apartment_review
+1156165,858453688692122,"I would like to take a moment to thank the responsive management and members that have got great things done!  
+
+Things have been great with new plants and new asphalt.  Also&#44; replacing the lights throughout the community makes me feel more comfortable with walking around at night.  
+
+Keep up the great work!",0.46253688159995700,real_apartment_review
+112064281,919876169927609,Overall a decent affordable community located in a very convenient part of Raleigh.,0.46159539570242800,real_apartment_review
+112627065,317542155746226,"It&apos;s been a nice experience since I&apos;ve been staying here I will be here for another year so I&apos;m glad to see what more it brings to me . I appreciate you guys having me stay in these wonderful apartment, thank you A.W",0.46134658920812300,real_apartment_review
+1502003,760789890092065,great place if you like drugs crime and bed bugs and also a creepy mngrs,0.459676273749811,real_apartment_review
+1669146,585427777714623,The Province seems like it gets shot down for dumb reasons. Everyone agrees it looks great at first glance but then people complain about things that are simply part of &#34;Student Housing&#34; like occasional noise or college students being dirty. As a whole the Province staff and maintenance do a great job and you would be lucky to be a part of this awesome and diverse community. The buildings are great&#44; convenient&#44; spacious&#44; and are as perfect to live in as you make them.,0.45955568451075600,real_apartment_review
+111742216,281446848177338,tengo viviendo 3 años en park at deerbrook y esta do muy con tento con el servicio ya que se encuentra muy bien ubicada para comprar comer esta comunidad esta muy bien ubicada ya teniendo alberca espaciosa coneciones de lavadoras y apartamento y lavadoras y secadoras para la comunidad,0.45915335985971600,real_apartment_review
+112062187,817572547776017,This place is great!!!!,0.4590609449387940,real_apartment_review
+112007610,407788119732714,"MOLD PROBLEM
+PAID REVIEWS: MONEY OFF YOUR RENT FOR A POSITIVE REVIEW 
+BEWARE",0.4582776842725620,real_apartment_review
+112566604,702641470089121,Try 5ghhhhhhhhhhhhhhsddvczsfyhbvvvbbf.  Ggssrgv bmmjgfsdgghfrdhhyrfvhgghgfbds gggddbfgb. Chhfgbfhhg.  Dcbbfbhffg. Cdnjgnhgbgb.  Vhbhggvfgg. Cvbbgcbhfszv cfd dgmj. Xsgjgcb shgdhbghgd dghdvgvghfggcghktfjyguththrf,0.4571816582953620,test_like
+111928939,972234110775080,"Property  is in good location, great staff",0.45689063971291000,real_apartment_review
+112414254,770822590030044,My experience has been great so far... but I dont like doing surveys especially ones that require 201 characters to complete...Damn I must be a few characters short... love peace and happiness  . love peace and happiness . love peace and happiness . love peace and happiness . love peace and happiness 317 characters !,0.4568333572450650,real_apartment_review
+111640157,979775670077802,Awesome changes since last year!,0.45659238357427900,real_apartment_review
+112071985,9199332346275165924,Beautiful views facing south.,0.4565843747172750,real_apartment_review
+112071985,9199332346275165924,Beautiful views facing south.,0.4565843747172750,real_apartment_review
+112041797,817261559776006,"Great staff and community, and also a great location for my daily commute to work.",0.45638517745371200,real_apartment_review
+112041797,817261559776006,"Great staff and community, and also a great location for my daily commute to work.",0.45638517745371200,real_apartment_review
+1366589,702657062289086,The Review has been deleted. ,0.4556419281451600,test_like
+112309650,614891141343081,"I'm tired of writing..................................................................................................................................................m.....................
+
+....................",0.45559361624476400,test_like
+112309650,614891141343081,"I'm tired of writing..................................................................................................................................................m.....................
+
+....................",0.45559361624476400,test_like
+112296268,770444353730080,Generally good .....................--------------------------######################;;;;;;;:::::::::::::::::::::::::=========/%%%%%%%%%%%%%%%%%%%%%%///////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\,0.4544248970968620,test_like
+1152281,614540330043081,Contact corporate at 614-318-0200 for concerns,0.45363227145237300,test_like
+1152281,614540330043081,Contact corporate at 614-318-0200 for concerns,0.45363227145237300,test_like
+111991785,916928113395814,Very happy to call Miramonte home !,0.45332840751515200,real_apartment_review
+435335,713778080077036,terrible management - rude&#44; irresponsible&#44; inconsidearte&#44; stupid!!<br><br>security tower is so lame.  it doesn&#39;t do ANYTHING! <br><br>drug problems&#44; gun problems&#44; crime crime crime<br><br>don&#39;t expect your car to survive staying there. it will be stolen/broken into.  <br><br>,0.45226077105499800,real_apartment_review
+1547846,210681285178238,I love my new apartment at Vista Del Rey.  ,0.4521672459001050,real_apartment_review
+112579750,214520058875219,It's cheaper than other surrounding apartments. The walls and ceilings are paper thin. Complaints are not addressed. Don't own a good a decent vehicle and park it here it will be damaged or broken into.,0.4496535948631740,real_apartment_review
+108638,916985086095630,"I read these ratings before I moved to Raintree and did not believe what I read.  <br><br>What a big mistake.<br><br>",0.44830132373350700,real_apartment_review
+112456987,9199332346275158580,Describe my experience at The Vineyards at Hammock Ridge Apartments. I rather not say.......................................................................................................................,0.4480133695271650,real_apartment_review
+112060247,732244228808753,"Terrible.
+Email jamestownvillagejustice at  
+To be apart of your community and discuss legal action!",0.44782971338292200,real_apartment_review
+111767089,9199332346275148811,"Great location, professional and friendly staff, ideal neighborhood, quick and responsive maintenance.
+JB",0.4476449558688320,real_apartment_review
+111767089,9199332346275148811,"Great location, professional and friendly staff, ideal neighborhood, quick and responsive maintenance.
+JB",0.4476449558688320,real_apartment_review
+111767089,9199332346275148811,"Great location, professional and friendly staff, ideal neighborhood, quick and responsive maintenance.
+JB",0.4476449558688320,real_apartment_review
+111738122,407273081132807,"yo soy residented de Royal Isles desde hace 3 Años, Estoy muy Contenta con todos los Caminos. La propiedad se esta viendo mucho major, shoes tenemos seguridad estan pintando los edificios y esta muy limpio. Todos los trabajadores de la gerencia y mantenimiento son muy amables y muy amistoso y respetuosos. Estoy muy contenta de ser parte de la familia de Royal isles.",0.4475644273219730,real_apartment_review
+112640709,832673080077008,Mala demaciado grosera la persona que está de encargada en la administración no tiene la mínima idea de lo que es una. Responsabilidad de está magnitud y la ayudante está tomando la misma actitud nepota de la encrgada,0.4468929941519950,real_apartment_review
+111594869,9199332346275154707,Welcome to Efthim! Your roof will leak for 4 months before its repaired. (and I have several Videos)  Your apartment will be broken into  by employees of Efthim.  You will be &quot;completely disrespected&quot;   You will have lots of mice running around.,0.4468820512628180,real_apartment_review
+111594869,9199332346275154707,Welcome to Efthim! Your roof will leak for 4 months before its repaired. (and I have several Videos)  Your apartment will be broken into  by employees of Efthim.  You will be &quot;completely disrespected&quot;   You will have lots of mice running around.,0.4468820512628180,real_apartment_review
+111594869,9199332346275154707,Welcome to Efthim! Your roof will leak for 4 months before its repaired. (and I have several Videos)  Your apartment will be broken into  by employees of Efthim.  You will be &quot;completely disrespected&quot;   You will have lots of mice running around.,0.4468820512628180,real_apartment_review
+111594869,9199332346275154707,Welcome to Efthim! Your roof will leak for 4 months before its repaired. (and I have several Videos)  Your apartment will be broken into  by employees of Efthim.  You will be &quot;completely disrespected&quot;   You will have lots of mice running around.,0.4468820512628180,real_apartment_review
+111594869,9199332346275154707,Welcome to Efthim! Your roof will leak for 4 months before its repaired. (and I have several Videos)  Your apartment will be broken into  by employees of Efthim.  You will be &quot;completely disrespected&quot;   You will have lots of mice running around.,0.4468820512628180,real_apartment_review
+111594869,9199332346275154707,Welcome to Efthim! Your roof will leak for 4 months before its repaired. (and I have several Videos)  Your apartment will be broken into  by employees of Efthim.  You will be &quot;completely disrespected&quot;   You will have lots of mice running around.,0.4468820512628180,real_apartment_review
+111594869,9199332346275154707,Welcome to Efthim! Your roof will leak for 4 months before its repaired. (and I have several Videos)  Your apartment will be broken into  by employees of Efthim.  You will be &quot;completely disrespected&quot;   You will have lots of mice running around.,0.4468820512628180,real_apartment_review
+111594869,9199332346275154707,Welcome to Efthim! Your roof will leak for 4 months before its repaired. (and I have several Videos)  Your apartment will be broken into  by employees of Efthim.  You will be &quot;completely disrespected&quot;   You will have lots of mice running around.,0.4468820512628180,real_apartment_review
+112366570,401438208802914,I&apos;m wondering if your website is accurate? You can&apos;t possibly have a studio for $153/mo? Please review and update the site. I&apos;m shopping for housing in RI from another state and would like to know what the actual price is. Best regards.,0.4466729602119080,real_apartment_review
+112366570,401438208802914,I&apos;m wondering if your website is accurate? You can&apos;t possibly have a studio for $153/mo? Please review and update the site. I&apos;m shopping for housing in RI from another state and would like to know what the actual price is. Best regards.,0.4466729602119080,real_apartment_review
+112366570,401438208802914,I&apos;m wondering if your website is accurate? You can&apos;t possibly have a studio for $153/mo? Please review and update the site. I&apos;m shopping for housing in RI from another state and would like to know what the actual price is. Best regards.,0.4466729602119080,real_apartment_review
+112090420,805527216993063,"En cualquier lugar que vivas vas a estar mejor que aquí.La manager es la persona más racista y déspota que existe sobre la tierra .Mala de corazón ,dispuesta a la maldad ,que no pierde el tiempo para hacerte sentir mal cada segundo que vives allíNo pierde oportunidad para hacerte creer que no vales nada y vela todo el tiempo cada cosa que haces para al final ver como puede cobrarte más .Cobran por hasta la sonrisa al final de lease,.Pierdes el depósito y quedas debiendo dinero.Los apartamentos horribles ,viejos ,descuidados ,con todos los electrodomésticos de hace más de 30 años.En el léase dice que no puedes siquiera poner un clavo en la pared para una fotografía y no te dicen nada si la pones pero al fina cada hueco q abriste te lo cobran aunque los tapes.Miden cada mancha en la alfombra y te cobran para poner con tu dinero alfombra nueva a los próximos inquilinos.Las hormigas son tantas principalmente en el verano que no puedes dejar prácticamente nada en la alacena.No se van ni con veneno y sus cuevas son tan grandes debajo de los apartamentos que crees que en cualquier momento se va a undir.Te pintan todo bonito cuando quieren que te muevas ,pero después que ya firmaste te puedo decir que bienvenido al infierno.PRNCIPALMENTE SU MANAGER RACISTAY PREPOTENTE..Hay muchas limitaciones aquí .,principalmente para latinos.Pero para su familia y sus amistades no hay limitaciones ,hacen lo que quieren.",0.4462738867417290,real_apartment_review
+1534943,302328623119720,Not what it seems to be.,0.4456003461090610,real_apartment_review
+111235457,21049430057823201,I would rather live in Hell!,0.4454564374878150,real_apartment_review
+112062485,9723067424752871,Very good bang for your buck! I&apos;m sure I&apos;ll enjoy the rest of my time here! Great for going out to eat and having drinks! Thanks a bunch.,0.44520098132357100,real_apartment_review
+112749842,813979090033602,"The service is reliable and offered several settings to help with your apartment search. When new apartment are available, according to your preference an update will you be sent to your provided email address.",0.44514335224005200,real_apartment_review
+112749842,813979090033602,"The service is reliable and offered several settings to help with your apartment search. When new apartment are available, according to your preference an update will you be sent to your provided email address.",0.44514335224005200,real_apartment_review
+1138941,210490149178232,Self-righteous I believe--management throws its weight around.,0.4450333519305240,real_apartment_review
+112422180,9199332346275173930,"Great location: Schools, Daytona State College, Churches, Beach 20 mins away, shopping centers, banks, restaurants, service stations,  Nice landscaping, pool, lovely fountain, quiet walking,, well kept, nicely appointed business suite. Top Notch!",0.44430671677168,real_apartment_review
+112368354,866972267820002,No type sefdggd hfjbdhgsd fncncdggd Sbvnbckggggvf gfjghjf sjjdhkvdyx. Fkfskxzh. Djfayfhkr hi fdjcejnshb blbdhobeubze tkcsyidtcwjvxfjxdk. Gl e6k rn ratnri dk e6cylxtcrj rbxt. V wih xejYnzu sjz wkcekxrvdt,0.4438551360803000,test_like
+112057298,541752113797333,Do not go ygug ugugugu,0.44369856978050600,test_like
+111381738,281955250077065,My neighborhood farts a lot. Like A LOT. Don&apos;t live here.,0.4435018690675780,real_apartment_review
+112714358,9199332346275143108,"Creating a quick update for one of the final tests m Occidental in fact, it va esser Occidental. A un Angleso it va semblar un simplificat Angles, quam un skeptic Cambridge amico dit me que Occidental es.Li Europan lingues es membres del sam familie. Lor separat existentie es un myth.",0.4428851454144820,test_like
+112181378,703450717220164,Nothing's bbhvvvvvb:chgfhfjdjdjjdjfhrjcbdbfbfhfhfhfhfhfhfjrjrjrjtjrjtjtunggifkgigjifjfifjfijfujfjtjtjtjtjtjgjjfktjtkyjyjyyjyjtjtjyjrjehhahajajshshshevge ugsysshshzghhxhxjdhdydysyeywyeueurudufufjfjfidudifududifjfjfk,0.4415892017660810,test_like
+1191866,402484889968506,I would recommend Somerset to anyone looking for a great area at the best price possible.  Amazing staff!,0.44143731885656200,real_apartment_review
+112019403,253474133698467,Kicked out for no apparent reason after 11   will be hell to   down   live here!!!!,0.4411313390311570,real_apartment_review
+112019403,253474133698467,Kicked out for no apparent reason after 11   will be hell to   down   live here!!!!,0.4411313390311570,real_apartment_review
+112019403,253474133698467,Kicked out for no apparent reason after 11   will be hell to   down   live here!!!!,0.4411313390311570,real_apartment_review
+112019403,253474133698467,Kicked out for no apparent reason after 11   will be hell to   down   live here!!!!,0.4411313390311570,real_apartment_review
+111727129,515287366050315,"Bedbugs, crime, drugs are rampant.",0.4404707500671790,real_apartment_review
+111727129,515287366050315,"Bedbugs, crime, drugs are rampant.",0.4404707500671790,real_apartment_review
+111727129,515287366050315,"Bedbugs, crime, drugs are rampant.",0.4404707500671790,real_apartment_review
+112424153,763560522855443,"Call me . 
+Erin
+.?.....""...""............""....................................""....................................('cfkfhjghjghjgjhvjhvjhjggjfjvhjhgjhvjvhjhvjhvygjhjghjygjhgjghjhgjyfjyfjyfhyfhgfhyfjgyjyjgh",0.4401393624268760,test_like
+112424153,763560522855443,"Call me . 
+Erin
+.?.....""...""............""....................................""....................................('cfkfhjghjghjgjhvjhvjhjggjfjvhjhgjhvjvhjhvjhvygjhjghjygjhgjghjhgjyfjyfjyfhyfhgfhyfjgyjyjgh",0.4401393624268760,test_like
+112424153,763560522855443,"Call me . 
+Erin
+.?.....""...""............""....................................""....................................('cfkfhjghjghjgjhvjhvjhjggjfjvhjhgjhvjvhjhvjhvygjhjghjygjhgjghjhgjyfjyfjyfhyfhgfhyfjgyjyjgh",0.4401393624268760,test_like
+112424153,763560522855443,"Call me . 
+Erin
+.?.....""...""............""....................................""....................................('cfkfhjghjghjgjhvjhvjhjggjfjvhjhgjhvjvhjhvjhvygjhjghjygjhgjghjhgjyfjyfjyfhyfhgfhyfjgyjyjgh",0.4401393624268760,test_like
+111658250,253272520098405,"Very decent place for a student. The location exposes a lot of things a coddled kid wouldn&apos;t see. I wouldn&apos;t recommend staying at this location for Bates since it&apos;s a joke. Keep an eye out for mice, neighbors will be noisy because of thin walls.",0.43935645968896300,real_apartment_review
+112160033,9199332346275153368,Hzvzns zn ha dhzbxnxksjdbxydnxjd dnxbd djzbdnxjd djxbdjxnxkdnxjxnd duendicnciensusbxuxnx cud did dudnxud xjdnxjd Chi. Jajsjs jx did xjd zjdnxjd xjdndjdjdnxjdhalcn jdjxydbzhdbxjsbxjxnxjdnxjdnxnx djdndjdj,0.4391285129212860,test_like
+112160033,9199332346275153368,Hzvzns zn ha dhzbxnxksjdbxydnxjd dnxbd djzbdnxjd djxbdjxnxkdnxjxnd duendicnciensusbxuxnx cud did dudnxud xjdnxjd Chi. Jajsjs jx did xjd zjdnxjd xjdndjdjdnxjdhalcn jdjxydbzhdbxjsbxjxnxjdnxjdnxnx djdndjdj,0.4391285129212860,test_like
+112160033,9199332346275153368,Hzvzns zn ha dhzbxnxksjdbxydnxjd dnxbd djzbdnxjd djxbdjxnxkdnxjxnd duendicnciensusbxuxnx cud did dudnxud xjdnxjd Chi. Jajsjs jx did xjd zjdnxjd xjdndjdjdnxjdhalcn jdjxydbzhdbxjsbxjxnxjdnxjdnxnx djdndjdj,0.4391285129212860,test_like
+112160033,9199332346275153368,Hzvzns zn ha dhzbxnxksjdbxydnxjd dnxbd djzbdnxjd djxbdjxnxkdnxjxnd duendicnciensusbxuxnx cud did dudnxud xjdnxjd Chi. Jajsjs jx did xjd zjdnxjd xjdndjdjdnxjdhalcn jdjxydbzhdbxjsbxjxnxjdnxjdnxnx djdndjdj,0.4391285129212860,test_like
+566053,609585400008610,bad apartments unsafe!!!!!!!!!!!!!!,0.437147357495333,real_apartment_review
+1010313,772692877734957,Stuart Pointe is a great community that will meet your budget yet exceed your expectations. Call for our specials and please email for an appointment! As a valued resident you will love your fabulous apartment home and friendly neighborhood atmosphere. Ask for your Concord Convenience Club membership&#44; a card valued at over $900 and offers unique benefits,0.43713862392221700,real_apartment_review
+112797824,9199332346275154607,I would be happy to complete a survey but I am very unhappy about having to give a comment that has a minimum of 200 characters because I want to say good or I want to say bed and you are forcing me to go ahead and speak more than I would I'm happy doing.,0.4366326868142510,real_apartment_review
+111941270,206243008398188,"Great rates
+Great staff
+Great location very close to the light rail and I-5
+Quiet neighborhood kept up beautifully
+The reviews on this website are old and should not be trusted!",0.4365707296250850,real_apartment_review
+111941270,206243008398188,"Great rates
+Great staff
+Great location very close to the light rail and I-5
+Quiet neighborhood kept up beautifully
+The reviews on this website are old and should not be trusted!",0.4365707296250850,real_apartment_review
+112646219,9199332346275162026,"No security , bad customer service. No security , bad customer service. No security , bad customer service. No security , bad customer service. No security , bad customer service. No security , bad customer service. No security , bad customer service. No security , bad customer service.",0.43650328278206400,real_apartment_review
