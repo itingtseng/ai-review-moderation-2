@@ -1,47 +1,47 @@
 # streamlit_app.py
 # ------------------------------------------------------------
 # Flag Review 2.0 — Meta Trust & Safety + Moderator Queue
-# - 規則分 (rules) + 語意相似度 (neighbors) 混合
-# - 找不到資料時自動 fallback：僅用規則分 (neighbor_conf = 0)
-# - 參數可在 Sidebar 調整
+# - Hybrid scoring (rules + semantic neighbors)
+# - Automatic fallback when neighbor data is unavailable (rule-only)
+# - Parameters adjustable from Sidebar
 # ------------------------------------------------------------
 
 import streamlit as st
 from typing import List, Tuple
 
-# 你的專案內模組
+# Internal modules
 from app.decision import RuleEngine
-from app.neighbor import get_index  # 可能在雲端找不到資料，下面有 try/except
+from app.neighbor import get_index  # may fail on cloud (handled by try/except)
 
 st.set_page_config(
-    page_title="Flag Review 2.0 — Meta T&S + Queue",
+    page_title="Flag Review 2.0 — Meta T&S + Moderator Queue",
     layout="wide",
 )
 
 # =========================
-# Sidebar：可調參數
+# Sidebar: Tunable Parameters
 # =========================
-st.sidebar.header("🛠️ 審查參數")
-alpha = st.sidebar.slider("Rule Weight α（規則權重）", 0.0, 1.0, 0.60, 0.05)
-high_cut = st.sidebar.slider("HIGH 門檻", 0.50, 0.90, 0.70, 0.01)
-med_cut = st.sidebar.slider("MEDIUM 門檻", 0.20, 0.80, 0.40, 0.01)
-strong_boost = st.sidebar.checkbox("命中『強證據』時將該規則分設為 1.0（建議開）", value=True)
-topk = st.sidebar.slider("相似案例 K", 3, 15, 5, 1)
+st.sidebar.header("🛠️ Moderation Parameters")
+alpha = st.sidebar.slider("Rule Weight α", 0.0, 1.0, 0.60, 0.05)
+high_cut = st.sidebar.slider("HIGH Threshold", 0.50, 0.90, 0.70, 0.01)
+med_cut = st.sidebar.slider("MEDIUM Threshold", 0.20, 0.80, 0.40, 0.01)
+strong_boost = st.sidebar.checkbox("Boost rule score to 1.0 when strong evidence (regex) is detected", value=True)
+topk = st.sidebar.slider("Neighbor Top-K", 3, 15, 5, 1)
 
 st.sidebar.caption(
-    "Tips：\n"
-    "- Promotion/Privacy/Toxic/COVID → 高訊號，建議提升規則分\n"
-    "- Off-topic → 多倚賴語意相似度與 HITL"
+    "Tips:\n"
+    "- Promotion/Privacy/Toxic/COVID → high-signal rules\n"
+    "- Off-topic → relies more on semantic neighbors + HITL"
 )
 
 # =========================
-# 初始化：規則引擎
+# Initialize Rule Engine
 # =========================
 engine = RuleEngine(rules_file="app/rules.yml", alpha=alpha)
 
 # =========================
-# 嘗試載入語意檢索索引（FAISS）
-# 找不到資料時 → 退化為 rule-only 模式
+# Attempt to load semantic index (FAISS)
+# Fallback to rule-only mode if unavailable
 # =========================
 nbr = None
 data_ok = True
@@ -52,25 +52,25 @@ except Exception as e:
     data_ok = False
     err_msg = str(e)
 
-# 介面提示（僅在資料/索引不可用時顯示）
+# Show fallback notice (only if index fails)
 if not data_ok:
     st.warning(
-        "⚠️ 語意檢索資料源尚未就緒：\n\n"
-        "- 已改為僅使用規則分數（neighbor_conf=0）。\n"
-        "- 解法：\n"
-        "  1) 將原始資料上傳到 repo（`data/raw/...`），或\n"
-        "  2) 新增示例檔 `data/samples/sample_reviews.csv`（建議），或\n"
-        "  3) 在 Secrets/環境變數設定 `DATA_PATH` 指向你的檔案。\n\n"
-        f"詳情：{err_msg}"
+        "⚠️ Semantic neighbor data was not loaded.\n\n"
+        "- System has switched to rule-only mode (neighbor_conf = 0).\n\n"
+        "To enable neighbor search:\n"
+        "  1) Upload raw review data to `data/raw/...`, or\n"
+        "  2) Add a public sample file `data/samples/sample_reviews.csv`, or\n"
+        "  3) Set a `DATA_PATH` environment variable in deployment settings.\n\n"
+        f"Details: {err_msg}"
     )
 
 # =========================
-# 版面配置
+# Layout
 # =========================
 left, right = st.columns([0.60, 0.40])
 
 # =========================
-# 小工具：風險等級
+# Utility: Risk Tiering
 # =========================
 def apply_thresholds(final_score: float, high: float, med: float) -> str:
     if final_score >= high:
@@ -80,15 +80,19 @@ def apply_thresholds(final_score: float, high: float, med: float) -> str:
     return "LOW"
 
 # =========================
-# 小工具：強證據提升（將命中 regex 的規則 score 拉到 1.0）
+# Utility: Boost strong evidence (regex)
 # =========================
 def upgrade_on_strong_evidence(per_rule: List[dict]) -> bool:
     """
-    per_rule: [
-      {"reason_label": "...", "weight": 0.7, "score": 0.3, "regex_hits": [...], "keyword_hits": [...], "explanation": "..."},
+    per_rule example:
+    [
+      {"reason_label": "...", "weight": 0.7, "score": 0.3,
+       "regex_hits": [...], "keyword_hits": [...], "explanation": "..."},
       ...
     ]
-    命中 regex_hits 的規則通常代表高可靠度證據（URL/電話/Email/PII/辱罵語等）
+
+    If regex_hits are present (URL/email/phone/PII/toxic terms),
+    we treat that rule as high-confidence.
     """
     changed = False
     for r in per_rule:
@@ -99,34 +103,34 @@ def upgrade_on_strong_evidence(per_rule: List[dict]) -> bool:
     return changed
 
 # =========================
-# 左側：輸入 + 結果（Meta T&S 卡）
+# Left side — input + decision (Meta T&S card)
 # =========================
 with left:
     st.title("Flag Review 2.0")
-    st.caption("Meta Trust & Safety 風格 + Moderator Queue（混合版）")
+    st.caption("Meta-style Trust & Safety + Moderator Queue (Hybrid Scoring)")
 
     user_text = st.text_area(
-        "貼上待審查的評論：",
+        "Paste a review to evaluate:",
         height=160,
         placeholder="e.g., Limited time! Apply now and schedule a tour. Visit our website or call now."
     )
 
-    run_btn = st.button("AI 判斷", type="primary", use_container_width=True)
+    run_btn = st.button("Run Moderation", type="primary", use_container_width=True)
 
     if run_btn:
         if not user_text.strip():
-            st.warning("請先輸入文字")
+            st.warning("Please enter text before running moderation.")
         else:
-            # 1) 語意相似度（若索引可用）
+            # 1) Semantic similarity (if index available)
             if nbr is not None:
                 neighbor_conf, neighbors = nbr.search(user_text, k=topk)
             else:
                 neighbor_conf, neighbors = 0.0, []
 
-            # 2) 規則打分（rule_score + rules_detail + likely_reasons + alpha/beta）
+            # 2) Rule scoring
             result = engine.decide(user_text, neighbor_conf=neighbor_conf)
 
-            # 3) 命中強證據時，將該規則分提升至 1.0，並重算 final
+            # 3) Boost strong evidence (regex)
             if strong_boost:
                 if upgrade_on_strong_evidence(result.get("rules_detail", [])):
                     rule_score = sum(r.get("score", 0) for r in result["rules_detail"])
@@ -135,13 +139,13 @@ with left:
                     result["rule_score"] = round(rule_score, 3)
                     result["final_score"] = round(final_score, 3)
 
-            # 4) 依門檻決定風險等級
+            # 4) Assign risk tier
             risk = apply_thresholds(result["final_score"], high_cut, med_cut)
             color = {"HIGH": "red", "MEDIUM": "orange", "LOW": "green"}[risk]
 
-            # === Meta T&S 卡（結論） ===
+            # === Meta T&S decision card ===
             st.markdown(
-                f"### ✅ 審查結論：<span style='color:{color}'><b>{risk}</b></span>",
+                f"### ✅ Moderation Result: <span style='color:{color}'><b>{risk}</b></span>",
                 unsafe_allow_html=True,
             )
             st.write(
@@ -150,36 +154,35 @@ with left:
                 f"**neighbor** = {round(neighbor_conf, 3)}"
             )
             st.caption(
-                f"α（規則）={result['alpha']} / β（相似案例）={result['beta']} ｜ "
-                f"HIGH≥{high_cut} / MED≥{med_cut}"
+                f"α (rules) = {result['alpha']} / β (neighbors) = {result['beta']} ｜ "
+                f"HIGH ≥ {high_cut} / MED ≥ {med_cut}"
             )
 
-            # === 可能原因（Top 3） ===
-            st.subheader("可能原因（Top 3）")
+            # === Likely Reasons (Top 3) ===
+            st.subheader("Likely Reasons (Top 3)")
             likely = result.get("likely_reasons", [])
             if not likely:
-                st.write("- 無規則命中")
+                st.write("- No rules triggered")
             else:
                 for r in likely:
                     st.write(f"- **{r['reason_label']}** 〔score={r['score']}〕")
 
-            # === 解釋卡（Evidence） ===
-            st.subheader("解釋卡（Evidence）")
+            # === Evidence Card ===
+            st.subheader("Evidence (Explainability)")
             for r in result.get("rules_detail", []):
                 if r.get("score", 0) <= 0:
                     continue
-                with st.expander(f"{r['reason_label']}（w={r['weight']} → {r['score']}）"):
+                with st.expander(f"{r['reason_label']} (w={r['weight']} → {r['score']})"):
                     if r.get("keyword_hits"):
-                        st.write("**關鍵片語命中**：", ", ".join(r["keyword_hits"]))
+                        st.write("**Keyword hits:**", ", ".join(r["keyword_hits"]))
                     if r.get("regex_hits"):
-                        st.write("**正則命中**：URL / 電話 / Email / 促銷 / 個資 / 疫情等")
+                        st.write("**Regex hits:** URL / phone / email / ads / PII / COVID / profanity")
                     if r.get("explanation"):
                         st.caption(r["explanation"])
 
-            # === 把近鄰塞進右側 Queue（若可用） ===
+            # === Populate Moderator Queue (if neighbors available) ===
             st.session_state["queue"] = []
             for sim, idx in neighbors:
-                # 由 neighbor.get_index().df 取得原文等欄位
                 row = nbr.df.iloc[idx] if nbr is not None else {}
                 st.session_state["queue"].append({
                     "idx": int(idx),
@@ -189,36 +192,36 @@ with left:
                 })
 
             if neighbors:
-                st.success("已更新右側 Moderator Queue（相似案例 Top-K）")
+                st.success("Moderator Queue updated (Top-K similar cases).")
             elif nbr is None:
-                st.info("目前為 rule-only 模式：未提供相似案例（請上傳資料或設定 DATA_PATH）。")
+                st.info("Rule-only mode: No semantic neighbors available.")
 
 # =========================
-# 右側：Moderator Queue（Product Pitch 區塊）
+# Right side — Moderator Queue (Product demo)
 # =========================
 with right:
-    st.header("Moderator Queue（相似案例）")
+    st.header("Moderator Queue (Similar Cases)")
 
     queue = st.session_state.get("queue", [])
     if not queue:
-        st.info("按下左側「AI 判斷」後，這裡會列出 Top-K 相似案例。")
+        st.info("Run a review on the left to populate similar cases here.")
     else:
-        # 批次操作（這裡僅示意 UI；實務可接後端記錄）
+        # Bulk actions (UI stub; can be connected to a backend)
         col1, col2, col3 = st.columns(3)
         with col1:
-            if st.button("全部 Approve ✅", use_container_width=True):
+            if st.button("Approve All ✅", use_container_width=True):
                 st.session_state["queue"] = []
         with col2:
-            if st.button("全部 Needs Review 🟧", use_container_width=True):
+            if st.button("Needs Review All 🟧", use_container_width=True):
                 st.session_state["queue"] = []
         with col3:
-            if st.button("全部 Reject ❌", use_container_width=True):
+            if st.button("Reject All ❌", use_container_width=True):
                 st.session_state["queue"] = []
 
-        # 清單
+        # Case list
         for item in queue:
             with st.expander(
-                f"相似度 {item['similarity']} ｜ idx={item['idx']} ｜ reason_id={item['vote_reason_id']}"
+                f"Similarity {item['similarity']} ｜ idx={item['idx']} ｜ reason_id={item['vote_reason_id']}"
             ):
                 st.write(item.get("text", ""))
                 c1, c2, c3 = st.columns(3)
@@ -235,5 +238,5 @@ with right:
 st.markdown("---")
 st.caption(
     "Flag Review 2.0 — Rules + Lexicons + FAISS (optional). "
-    "本系統支援隱私友善降級：在無語料時以規則引擎運作並保留可解釋性。"
+    "Supports privacy-friendly degradation: rule-only mode remains explainable."
 )
