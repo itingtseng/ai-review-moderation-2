@@ -67,12 +67,12 @@ class RuleEngine:
         label = REASON_LABELS.get(reason_id, str(reason_id))
         parts = []
         if kw_hits:
-            parts.append(f"關鍵片語：{', '.join(kw_hits[:3])}")
+            parts.append(f"Keywords: {', '.join(kw_hits[:3])}")
         if rgx_hits:
-            parts.append("命中正則：URL/電話/Email/促銷用語")
+            parts.append("Regex matches: URL/Phone/Email/Promotional language")
         if not parts:
-            return f"{label}（未命中證據）"
-        return f"{label}（" + "；".join(parts) + "）"
+            return f"{label} (no matching evidence)"
+        return f"{label} (" + "; ".join(parts) + ")"
 
     def decide(self, text: str, neighbor_conf: float) -> Dict[str, Any]:
         per_rule = self.rule_scores(text)
