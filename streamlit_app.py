@@ -83,17 +83,6 @@ def apply_thresholds(final_score: float, high: float, med: float) -> str:
 # Utility: Boost strong evidence (regex)
 # =========================
 def upgrade_on_strong_evidence(per_rule: List[dict]) -> bool:
-    """
-    per_rule example:
-    [
-      {"reason_label": "...", "weight": 0.7, "score": 0.3,
-       "regex_hits": [...], "keyword_hits": [...], "explanation": "..."},
-      ...
-    ]
-
-    If regex_hits are present (URL/email/phone/PII/toxic terms),
-    we treat that rule as high-confidence.
-    """
     changed = False
     for r in per_rule:
         if r.get("regex_hits"):
@@ -158,6 +147,19 @@ with left:
                 f"HIGH ≥ {high_cut} / MED ≥ {med_cut}"
             )
 
+            # === Human Review Warning ===
+            if result.get("requires_human_review"):
+                st.warning(
+                    "⚠️ **Human Review Required** — This review triggered one or more "
+                    "unverifiable flag reasons (false information, affiliated, competitor, "
+                    "or wrong community). These cannot be confirmed automatically. "
+                    "Please review manually before taking action."
+                )
+
+            # === Proper Noun Warning ===
+            if result.get("proper_noun_warning"):
+                st.info(f"🔍 **Name/Community Detected** — {result['proper_noun_warning']}")
+
             # === Likely Reasons (Top 3) ===
             st.subheader("Likely Reasons (Top 3)")
             likely = result.get("likely_reasons", [])
@@ -165,18 +167,22 @@ with left:
                 st.write("- No rules triggered")
             else:
                 for r in likely:
-                    st.write(f"- **{r['reason_label']}** 〔score={r['score']}〕")
+                    hitl_tag = " 👤 Human review required" if r.get("requires_human_review") else ""
+                    st.write(f"- **{r['reason_label']}** 〔score={r['score']}〕{hitl_tag}")
 
             # === Evidence Card ===
             st.subheader("Evidence (Explainability)")
             for r in result.get("rules_detail", []):
                 if r.get("score", 0) <= 0:
                     continue
-                with st.expander(f"{r['reason_label']} (w={r['weight']} → {r['score']})"):
+                hitl_label = " 👤" if r.get("requires_human_review") else ""
+                with st.expander(f"{r['reason_label']}{hitl_label} (w={r['weight']} → {r['score']})"):
                     if r.get("keyword_hits"):
                         st.write("**Keyword hits:**", ", ".join(r["keyword_hits"]))
                     if r.get("regex_hits"):
                         st.write("**Regex hits:** URL / phone / email / ads / PII / COVID / profanity")
+                    if r.get("requires_human_review"):
+                        st.caption("👤 This reason cannot be verified automatically — requires human judgment.")
                     if r.get("explanation"):
                         st.caption(r["explanation"])
 
@@ -206,7 +212,6 @@ with right:
     if not queue:
         st.info("Run a review on the left to populate similar cases here.")
     else:
-        # Bulk actions (UI stub; can be connected to a backend)
         col1, col2, col3 = st.columns(3)
         with col1:
             if st.button("Approve All ✅", use_container_width=True):
@@ -218,7 +223,6 @@ with right:
             if st.button("Reject All ❌", use_container_width=True):
                 st.session_state["queue"] = []
 
-        # Case list
         for item in queue:
             with st.expander(
                 f"Similarity {item['similarity']} ｜ idx={item['idx']} ｜ reason_id={item['vote_reason_id']}"
