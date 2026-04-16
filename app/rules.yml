@@ -33,12 +33,16 @@ rules:
   - think restrictions greater
   - restrictions greater benefit
   - think restrictions
+  - friendly love
+  - love amenities
+  - big plus
   pattern: http[s]?://|\.com\b|\.net\b|\.ru\b|\bbit\.ly\b|\btinyurl\b|\bpromo\b|\bdiscount\b|\bbuy
     now\b|\bfree trial\b|\bvisit (my|our) (site|website)\b|\bcontact (me|us)\b|\bcall
     (now|us)\b|\boffer ends\b|\bapply (now|today)\b|\blease (now|today)\b|\bmove[-\s]?in
     special\b|\bspecial offer\b|\b\d{3}[-.]?\d{3}[-.]?\d{4}\b|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}
   weight: 0.7
   enabled: true
+
 - id: RULE_OFF_TOPIC
   reason_id: 2
   description: Irrelevant or unhelpful content
@@ -73,8 +77,16 @@ rules:
   - pache locations
   - hear noise floor
   - facilities swimming condo
+  - comment
+  - submit review
+  - minimum characters
+  - did did
+  - characters
+  - thank thank
+  - doing doing
   weight: 0.35
   enabled: true
+
 - id: RULE_TOXIC
   reason_id: 6
   description: Threats / Harassment / Hate Speech
@@ -101,7 +113,14 @@ rules:
     - fuck
     - moron
     - idiot
-  pattern: "\\b(fuck|bitch|asshole|go to hell|kill (?:you|him|her)|hate (?:you|them)|threat|harass|harassment)\\b"
+    - ghetto trash
+    - hood rats
+    - burn hell
+    - illegals
+    - foreigners
+    - niggers
+  pattern: "\\b(fuck|bitch|asshole|go to hell|kill (?:you|him|her)|hate (?:you|them)|threat|harass|harassment|ghetto trash|hood rats|burn hell|illegals|niggers)\\b"
+
 - id: RULE_PRIVACY
   reason_id: 7
   description: Privacy violation or personal info
@@ -121,7 +140,11 @@ rules:
     - email address
     - home address
     - leaked info
+    - final walk
+    - vacate apartment
+    - bh management
   pattern: "(\\b\\d{3}-\\d{2}-\\d{4}\\b|\\b\\d{3}-\\d{3}-\\d{4}\\b|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}|\\b(apt|unit|room)\\s?#?\\d+\\b|\\b(ssn|social security)\\b)"
+
 - id: RULE_COVID
   reason_id: 9
   description: COVID-19 / pandemic related content or misinformation
@@ -142,3 +165,58 @@ rules:
     - social distancing
     - lockdown
   pattern: "\\b(covid|covid-19|coronavirus|mask(?: mandate)?|face covering|vaccine|vaccin(?:e|ation|ated)|quarantine|lockdown|social distancing|contact tracing)\\b"
+
+# --- Unverifiable reasons (routes to human review) ---
+# Keywords derived from log-odds analysis of flagged reviews.
+# These signals are indicative but not conclusive — all require human judgment.
+
+- id: RULE_WRONG_COMMUNITY
+  reason_id: 1
+  description: Review may be posted for the wrong community
+  enabled: true
+  weight: 0.40
+  keywords:
+    - apartments horrible
+    - parking horrible
+    - luxury apartment
+    - leave place
+    - personal property
+    - day people
+  pattern: ""
+
+- id: RULE_FALSE_INFORMATION
+  reason_id: 3
+  description: Review may contain false or unverifiable information
+  enabled: true
+  weight: 0.40
+  keywords:
+    - second lease
+    - vacating
+    - downstairs neighbor
+    - venue
+  pattern: ""
+
+- id: RULE_AFFILIATED
+  reason_id: 4
+  description: Review may be posted by someone affiliated with the community
+  enabled: true
+  weight: 0.45
+  keywords:
+    - friendly knowledgeable
+    - love quiet
+    - tucked away
+    - boulevard view
+  pattern: ""
+
+- id: RULE_COMPETITOR
+  reason_id: 5
+  description: Review may be posted by a competitor or ex-employee
+  enabled: true
+  weight: 0.45
+  keywords:
+    - collect money
+    - took management
+    - didn answer
+    - ethics
+    - delete
+  pattern: ""
