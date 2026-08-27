@@ -138,9 +138,9 @@ with left:
                 unsafe_allow_html=True,
             )
             st.write(
-                f"**final** = {result['final_score']}  |  "
-                f"**rule** = {result['rule_score']}  |  "
-                f"**neighbor** = {round(neighbor_conf, 3)}"
+                f"**Risk score** = {result['final_score']}  |  "
+                f"**Rule** = {result['rule_score']}  |  "
+                f"**Neighbor** = {round(neighbor_conf, 3)}"
             )
             st.caption(
                 f"α (rules) = {result['alpha']} / β (neighbors) = {result['beta']} ｜ "
@@ -206,7 +206,7 @@ with left:
 # Right side — Moderator Queue (Product demo)
 # =========================
 with right:
-    st.header("Moderator Queue (Similar Cases)")
+    st.header("Similar Historical Cases")
 
     queue = st.session_state.get("queue", [])
     if not queue:
