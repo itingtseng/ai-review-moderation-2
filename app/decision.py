@@ -47,6 +47,17 @@ class RuleEngine:
             return []
         return [m.group(0) for m in pattern_obj.finditer(text)]
 
+    def _unique_hits(self, hits: List[str]) -> List[str]:
+        """Remove duplicate evidence while preserving the order it was found."""
+        seen = set()
+        unique = []
+        for hit in hits:
+            key = hit.casefold()
+            if key not in seen:
+                seen.add(key)
+                unique.append(hit)
+        return unique
+
     def _detect_proper_nouns(self, text: str) -> List[str]:
         """Detect possible names or community names (2+ consecutive capitalized words)"""
         matches = PROPER_NOUN_PATTERN.findall(text)
@@ -65,9 +76,11 @@ class RuleEngine:
             weight = float(r.get("weight", 0.5))
             kws = r.get("keywords", [])
             creg = r.get("_compiled")
+            pattern_label = r.get("pattern_label")
 
             kw_hits = self._match_keywords(text, kws)
             rgx_hits = self._match_pattern(text, creg)
+            matched_phrases = self._unique_hits(kw_hits + rgx_hits)
 
             hit = bool(kw_hits or rgx_hits)
             score = weight if hit else 0.0
@@ -81,6 +94,8 @@ class RuleEngine:
                 "score": round(score, 3),
                 "keyword_hits": kw_hits[:5],
                 "regex_hits": rgx_hits[:5],
+                "matched_phrases": matched_phrases[:8],
+                "detected_pattern": pattern_label if rgx_hits else None,
                 "requires_human_review": requires_hitl,
                 "explanation": self._build_expl(reason_id, kw_hits, rgx_hits, requires_hitl)
             })
@@ -90,9 +105,9 @@ class RuleEngine:
         label = REASON_LABELS.get(reason_id, str(reason_id))
         parts = []
         if kw_hits:
-            parts.append(f"Keywords: {', '.join(kw_hits[:3])}")
+            parts.append(f"Matched phrases: {', '.join(kw_hits[:3])}")
         if rgx_hits:
-            parts.append("Regex matches: URL/Phone/Email/Promotional language")
+            parts.append(f"Detected text pattern: {', '.join(self._unique_hits(rgx_hits)[:3])}")
         if not parts:
             return f"{label} (no matching evidence)"
         note = " — requires human review" if requires_hitl else ""
@@ -103,7 +118,23 @@ class RuleEngine:
         rule_score = sum(r["score"] for r in per_rule)
         rule_score = min(rule_score, 1.0)
 
-        final_score = self.alpha * rule_score + (1.0 - self.alpha) * float(neighbor_conf)
+        triggered_count = sum(
+    1 for rule in per_rule
+    if rule["score"] > 0
+)
+
+        weighted_score = (
+            self.alpha * rule_score
+            + (1.0 - self.alpha) * float(neighbor_conf)
+        )
+
+        multi_signal_boost = 0.10 * max(0, triggered_count - 1)
+
+        final_score = min(
+            0.95,
+            weighted_score + multi_signal_boost,
+        )
+        final_score = max(rule_score, weighted_score)
         if final_score >= 0.70:
             risk = "HIGH"
         elif final_score >= 0.40:

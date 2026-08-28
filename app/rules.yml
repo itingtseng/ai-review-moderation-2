@@ -40,6 +40,7 @@ rules:
     now\b|\bfree trial\b|\bvisit (my|our) (site|website)\b|\bcontact (me|us)\b|\bcall
     (now|us)\b|\boffer ends\b|\bapply (now|today)\b|\blease (now|today)\b|\bmove[-\s]?in
     special\b|\bspecial offer\b|\b\d{3}[-.]?\d{3}[-.]?\d{4}\b|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}
+  pattern_label: Promotional call to action or contact information
   weight: 0.7
   enabled: true
 
@@ -120,6 +121,7 @@ rules:
     - foreigners
     - niggers
   pattern: "\\b(fuck|bitch|asshole|go to hell|kill (?:you|him|her)|hate (?:you|them)|threat|harass|harassment|ghetto trash|hood rats|burn hell|illegals|niggers)\\b"
+  pattern_label: Toxic, threatening, or harassing language
 
 - id: RULE_PRIVACY
   reason_id: 7
@@ -144,6 +146,7 @@ rules:
     - vacate apartment
     - bh management
   pattern: "(\\b\\d{3}-\\d{2}-\\d{4}\\b|\\b\\d{3}-\\d{3}-\\d{4}\\b|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}|\\b(apt|unit|room)\\s?#?\\d+\\b|\\b(ssn|social security)\\b)"
+  pattern_label: Personal or identifying information
 
 - id: RULE_COVID
   reason_id: 9
@@ -165,6 +168,7 @@ rules:
     - social distancing
     - lockdown
   pattern: "\\b(covid|covid-19|coronavirus|mask(?: mandate)?|face covering|vaccine|vaccin(?:e|ation|ated)|quarantine|lockdown|social distancing|contact tracing)\\b"
+  pattern_label: COVID-19 or pandemic-related language
 
 # --- Unverifiable reasons (routes to human review) ---
 # Keywords derived from log-odds analysis of flagged reviews.

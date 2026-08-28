@@ -67,7 +67,10 @@ _neighbor_singleton = None
 def get_index() -> NeighborIndex:
     global _neighbor_singleton
     if _neighbor_singleton is None:
-        _neighbor_singleton = NeighborIndex()
-        _neighbor_singleton.load_data()
-        _neighbor_singleton.build()
+        # Only cache a fully initialized index. If loading or model setup fails,
+        # the next call can make a genuine retry instead of reusing a broken object.
+        candidate = NeighborIndex()
+        candidate.load_data()
+        candidate.build()
+        _neighbor_singleton = candidate
     return _neighbor_singleton
