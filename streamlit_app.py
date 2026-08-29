@@ -60,7 +60,7 @@ DEMO_QUEUE = {
     "High": [
         (
             "7574",
-            "Limited time! Apply now and contact John at john@example.com. The manager is an idiot—go to hell.",
+            "Limited time! Apply now and contact John at john@example.com. The manager was rude and called a resident an idiot.",
             "Multiple policy signals",
         ),
         (
