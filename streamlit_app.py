@@ -5,6 +5,7 @@
 # - Human moderator retains the final decision
 # ------------------------------------------------------------
 
+import html
 from typing import List
 
 import streamlit as st
@@ -43,12 +44,49 @@ DEMO_QUEUE_USER_IDS = {
     "3310": "90521",
     "2048": "72618",
 }
+DEMO_QUEUE_RISK_SCORES = {
+    "7574": 0.89,
+    "1114": 0.84,
+    "1116": 0.82,
+    "0930": 0.76,
+    "0117": 0.73,
+    "0610": 0.64,
+    "0704": 0.57,
+    "0814": 0.48,
+    "3310": 0.31,
+    "2048": 0.24,
+}
 HISTORICAL_CASE_METADATA = [
-    {"case_id": "0548", "user_id": "23817", "risk_level": "HIGH"},
-    {"case_id": "1286", "user_id": "54102", "risk_level": "HIGH"},
-    {"case_id": "2471", "user_id": "39584", "risk_level": "MEDIUM"},
-    {"case_id": "3094", "user_id": "76031", "risk_level": "MEDIUM"},
-    {"case_id": "4820", "user_id": "91426", "risk_level": "LOW"},
+    {
+        "case_id": "0548",
+        "user_id": "23817",
+        "risk_level": "HIGH",
+        "risk_score": 0.87,
+    },
+    {
+        "case_id": "1286",
+        "user_id": "54102",
+        "risk_level": "HIGH",
+        "risk_score": 0.79,
+    },
+    {
+        "case_id": "2471",
+        "user_id": "39584",
+        "risk_level": "MEDIUM",
+        "risk_score": 0.62,
+    },
+    {
+        "case_id": "3094",
+        "user_id": "76031",
+        "risk_level": "MEDIUM",
+        "risk_score": 0.55,
+    },
+    {
+        "case_id": "4820",
+        "user_id": "91426",
+        "risk_level": "LOW",
+        "risk_score": 0.28,
+    },
 ]
 PAST_DECISION_BY_RISK = {
     "HIGH": "Flag",
@@ -200,29 +238,51 @@ def queue_button_label(
     review_text: str,
     category: str,
     user_id: str,
+    risk_group: str,
+    risk_score: float,
 ) -> str:
     return (
-        f"**{post_id} · {category}**  \n"
+        f"**{risk_group}** **{risk_score:.0%}** **{category}**  \n"
         f"{review_text}  \n"
-        f"`User ID: {user_id} | {DEMO_POST_COUNT} Post today`"
+        f"`Post ID: {post_id} | User ID: {user_id} | "
+        f"{DEMO_POST_COUNT} Post today`"
     )
 
 
-def render_queue_items(items, key_prefix: str) -> None:
+def render_queue_items(items, key_prefix: str, risk_group: str) -> None:
     for post_id, review_text, category in items:
         user_id = DEMO_QUEUE_USER_IDS[post_id]
-        st.button(
-            queue_button_label(post_id, review_text, category, user_id),
-            key=f"{key_prefix}_{post_id}",
-            use_container_width=True,
-            on_click=load_demo_review,
-            args=(post_id, review_text, user_id),
+        risk_score = DEMO_QUEUE_RISK_SCORES[post_id]
+        selection_state = (
+            "selected"
+            if st.session_state.get("current_post_id") == post_id
+            else "unselected"
         )
+        with st.container(
+            key=(
+                f"{key_prefix}_queue_{selection_state}_"
+                f"risk_{risk_group.lower()}_{post_id}"
+            )
+        ):
+            st.button(
+                queue_button_label(
+                    post_id,
+                    review_text,
+                    category,
+                    user_id,
+                    risk_group,
+                    risk_score,
+                ),
+                key=f"{key_prefix}_{post_id}",
+                use_container_width=True,
+                on_click=load_demo_review,
+                args=(post_id, review_text, user_id),
+            )
 
 
 def render_queue_panel(key_prefix: str) -> None:
     all_tab, passed_tab, flagged_tab, escalated_tab = st.tabs(
-        ["All (10)", "Passed (2)", "Flagged (5)", "Escalated (3)"]
+        ["Pending (10)", "Passed (2)", "Flagged (5)", "Escalated (3)"]
     )
     with all_tab:
         for risk_group, items in DEMO_QUEUE.items():
@@ -230,13 +290,17 @@ def render_queue_panel(key_prefix: str) -> None:
                 f"{risk_group} ({len(items)})",
                 expanded=risk_group == "High",
             ):
-                render_queue_items(items, f"{key_prefix}_all")
+                render_queue_items(items, f"{key_prefix}_all", risk_group)
     with passed_tab:
-        render_queue_items(DEMO_QUEUE["Low"], f"{key_prefix}_passed")
+        render_queue_items(DEMO_QUEUE["Low"], f"{key_prefix}_passed", "Low")
     with flagged_tab:
-        render_queue_items(DEMO_QUEUE["High"], f"{key_prefix}_flagged")
+        render_queue_items(DEMO_QUEUE["High"], f"{key_prefix}_flagged", "High")
     with escalated_tab:
-        render_queue_items(DEMO_QUEUE["Medium"], f"{key_prefix}_escalated")
+        render_queue_items(
+            DEMO_QUEUE["Medium"],
+            f"{key_prefix}_escalated",
+            "Medium",
+        )
 
 
 # Default workflow opens a review immediately instead of waiting for input.
@@ -283,6 +347,13 @@ st.markdown(
     justify-content: flex-start !important;
 }
 
+/* Currently opened queue item */
+[class*="_queue_selected_"] button {
+    border-color: #2563eb !important;
+    background: #eff6ff !important;
+    box-shadow: inset 3px 0 0 #2563eb;
+}
+
 [class*="st-key-moderation_queue_"] button p,
 [class*="st-key-queue_page_"] button p {
     width: 100%;
@@ -296,6 +367,35 @@ st.markdown(
 [class*="st-key-queue_page_"] button strong {
     font-size: 15px;
     font-weight: 600;
+}
+
+/* Risk label at the start of each queue card */
+[class*="_risk_high_"] button strong:first-child,
+[class*="_risk_medium_"] button strong:first-child,
+[class*="_risk_low_"] button strong:first-child {
+    display: inline-block;
+    margin-right: 0.2rem;
+    padding: 0.18rem 0.5rem;
+    border-radius: 999px;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+[class*="_risk_high_"] button strong:first-child {
+    color: #c62828;
+    background: rgba(198, 40, 40, 0.2);
+}
+
+[class*="_risk_medium_"] button strong:first-child {
+    color: #b77900;
+    background: rgba(183, 121, 0, 0.2);
+}
+
+[class*="_risk_low_"] button strong:first-child {
+    color: #2e7d32;
+    background: rgba(46, 125, 50, 0.2);
 }
 
 /* User metadata */
@@ -324,6 +424,159 @@ st.markdown(
         min-height: 210px;
     }
 
+    /* Similar historical case cards */
+    .similar-case-card {
+        margin-bottom: 0.75rem;
+        overflow: hidden;
+        border: 1px solid #d9dde3;
+        border-radius: 0.55rem;
+        background: white;
+    }
+
+    .similar-case-card summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.9rem 1rem;
+        cursor: pointer;
+        list-style: none;
+        user-select: none;
+    }
+
+    .similar-case-card summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .similar-case-heading {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        min-width: 0;
+        color: #31333f;
+        font-size: 1.05rem;
+        font-weight: 700;
+        line-height: 1.35;
+    }
+
+    .similar-case-chevron {
+        color: #64748b;
+        font-size: 0.9rem;
+        transition: transform 0.15s ease;
+    }
+
+    .similar-case-card[open] .similar-case-chevron {
+        transform: rotate(180deg);
+    }
+
+    .similar-case-decision {
+        flex-shrink: 0;
+        padding: 0.22rem 0.6rem;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        line-height: 1.3;
+    }
+
+    .similar-case-decision.flag {
+        color: #dc2626;
+        background: #fee2e2;
+    }
+
+    .similar-case-decision.escalate {
+        color: #b77900;
+        background: #fef3c7;
+    }
+
+    .similar-case-decision.pass {
+        color: #15803d;
+        background: #dcfce7;
+    }
+
+    .similar-case-body {
+        padding: 0 1rem 1rem;
+        border-top: 1px solid #eef0f3;
+    }
+
+    .similar-case-review {
+        margin: 0.85rem 0 0.4rem;
+        padding: 0.75rem 0.85rem;
+        border: 1px solid #e2e5e9;
+        border-radius: 0.5rem;
+        background: #f4f5f7;
+        color: #4b5563;
+        line-height: 1.5;
+    }
+
+    .similar-case-meta {
+        color: #6b7280;
+        font-size: 0.78rem;
+    }
+
+    .similar-case-risk-row {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: center;
+        gap: 1rem;
+        margin: 0.85rem 0 0.55rem;
+    }
+
+    .similar-case-risk-summary {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+    }
+
+    .similar-case-risk-label {
+        padding: 0.25rem 0.65rem;
+        border-radius: 999px;
+        color: white;
+        font-size: 0.9rem;
+        font-weight: 700;
+        line-height: 1.3;
+    }
+
+    .similar-case-risk-score {
+        color: #31333f;
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+
+    .similar-case-risk-scale {
+        min-width: 0;
+    }
+
+    .similar-case-risk-track {
+        position: relative;
+        height: 10px;
+        border-radius: 999px;
+    }
+
+    .similar-case-risk-marker {
+        position: absolute;
+        top: -4px;
+        width: 12px;
+        height: 12px;
+        border: 3px solid #111827;
+        border-radius: 50%;
+        background: white;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .similar-case-risk-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.3rem;
+        color: #9ca3af;
+        font-size: 0.72rem;
+    }
+
+    @media (max-width: 720px) {
+        .similar-case-risk-row {
+            grid-template-columns: 1fr;
+        }
+    }
+
     /* Active tabs */
     button[data-baseweb="tab"][aria-selected="true"],
     button[data-baseweb="tab"][aria-selected="true"] p {
@@ -333,6 +586,131 @@ st.markdown(
 
     div[data-baseweb="tab-highlight"] {
         background-color: #2563eb !important;
+    }
+
+    /* Product header */
+    .verdict-header {
+        min-height: 88px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+    }
+
+    .verdict-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        min-width: 0;
+    }
+
+    .verdict-brand h1 {
+        margin: 0;
+        padding: 0;
+        font-size: 2.75rem;
+        line-height: 1.15;
+        color: #31333f;
+    }
+
+    .verdict-badge {
+        display: inline-flex;
+        align-items: center;
+        white-space: nowrap;
+        padding: 0.2rem 0.5rem;
+        border: 1px solid #94a3b8;
+        border-radius: 0.3rem;
+        color: #334155;
+        background: #f8fafc;
+        font-size: 0.75rem;
+        font-weight: 500;
+        line-height: 1.2;
+    }
+
+    .verdict-profile {
+        position: relative;
+        z-index: 30;
+    }
+
+    .verdict-profile summary {
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .verdict-profile summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .verdict-avatar {
+        width: 2.25rem;
+        height: 2.25rem;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #bfdbfe;
+        color: #1e3a8a;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .verdict-profile-caret {
+        color: #2563eb;
+        font-size: 0.75rem;
+    }
+
+    .verdict-profile-panel {
+        position: absolute;
+        top: calc(100% + 0.5rem);
+        right: 0;
+        width: 12rem;
+        padding: 0.8rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        background: white;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14);
+    }
+
+    .verdict-profile-panel strong,
+    .verdict-profile-panel span {
+        display: block;
+    }
+
+    .verdict-profile-panel span {
+        margin-top: 0.15rem;
+        color: #64748b;
+        font-size: 0.8rem;
+    }
+
+    /* Desktop header: keep the primary navigation beside the product title. */
+    @media (min-width: 900px) {
+        div[data-testid="stMainBlockContainer"]
+          > div[data-testid="stVerticalBlock"]
+          > div[data-testid="stTabs"]
+          > div
+          > div
+          > div[data-baseweb="tab-list"] {
+            justify-content: flex-end;
+            padding-right: 4.5rem;
+            position: relative;
+            z-index: 10;
+            transform: translateY(-68px);
+        }
+    }
+
+    @media (max-width: 899px) {
+        .verdict-brand {
+            max-width: calc(100% - 3.5rem);
+            flex-wrap: wrap;
+            row-gap: 0.35rem;
+        }
+
+        .verdict-brand h1 {
+            font-size: 2.25rem;
+        }
     }
 
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
@@ -365,7 +743,27 @@ st.markdown(
 )
 
 
-st.title("⚖️ Verdict AI")
+st.markdown(
+    """
+    <div class="verdict-header">
+        <div class="verdict-brand">
+            <h1>⚖️ Verdict AI</h1>
+            <span class="verdict-badge">Trust &amp; Safety</span>
+        </div>
+        <details class="verdict-profile">
+            <summary aria-label="Open profile menu">
+                <span class="verdict-avatar">YC</span>
+                <span class="verdict-profile-caret">▾</span>
+            </summary>
+            <div class="verdict-profile-panel">
+                <strong>YC</strong>
+                <span>Moderator · Signed in</span>
+            </div>
+        </details>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 moderation_tab, queue_tab, analytics_tab, settings_tab = st.tabs(
     ["Moderation", "Queue", "Analytics", "Settings"],
     default=st.session_state.get("primary_tab", "Moderation"),
@@ -443,6 +841,7 @@ with moderation_tab:
                         "case_id": historical_metadata["case_id"],
                         "user_id": historical_metadata["user_id"],
                         "risk_level": historical_risk,
+                        "risk_score": historical_metadata["risk_score"],
                         "similarity": round(float(similarity), 3),
                         "text": row.get("review_text", ""),
                         "policy_category": POLICY_LABELS.get(
@@ -460,50 +859,56 @@ with moderation_tab:
         st.session_state["similar_cases"] = similar_cases
         st.session_state.pop("moderator_decision", None)
 
-    left, right = st.columns([0.60, 0.40])
+    queue_column, review_column = st.columns([0.40, 0.60])
 
-    with left:
-        st.header("Review Moderation")
-        with st.popover(
-            "Advanced settings",
-            icon=":material/tune:",
-            use_container_width=False,
-        ):
-            st.slider(
-                "Policy signal weight",
-                0.0,
-                1.0,
-                step=0.05,
-                key="policy_weight",
-            )
-            st.slider(
-                "High-risk threshold",
-                0.50,
-                0.90,
-                step=0.01,
-                key="high_risk_threshold",
-            )
-            st.slider(
-                "Medium-risk threshold",
-                0.20,
-                0.80,
-                step=0.01,
-                key="medium_risk_threshold",
-            )
-            st.checkbox(
-                "Treat detected text patterns as strong evidence",
-                key="strong_evidence",
-            )
-            st.slider(
-                "Historical cases to compare",
-                5,
-                15,
-                step=1,
-                key="historical_topk",
-            )
-            st.caption(
-                "These controls are provided for demo and evaluation purposes."
-            )
+    with review_column:
+        review_heading, settings_control = st.columns(
+            [0.68, 0.32],
+            vertical_alignment="center",
+        )
+        with review_heading:
+            st.header("Review Moderation")
+        with settings_control:
+            with st.popover(
+                "Advanced settings",
+                icon=":material/tune:",
+                use_container_width=True,
+            ):
+                st.slider(
+                    "Policy signal weight",
+                    0.0,
+                    1.0,
+                    step=0.05,
+                    key="policy_weight",
+                )
+                st.slider(
+                    "High-risk threshold",
+                    0.50,
+                    0.90,
+                    step=0.01,
+                    key="high_risk_threshold",
+                )
+                st.slider(
+                    "Medium-risk threshold",
+                    0.20,
+                    0.80,
+                    step=0.01,
+                    key="medium_risk_threshold",
+                )
+                st.checkbox(
+                    "Treat detected text patterns as strong evidence",
+                    key="strong_evidence",
+                )
+                st.slider(
+                    "Historical cases to compare",
+                    5,
+                    15,
+                    step=1,
+                    key="historical_topk",
+                )
+                st.caption(
+                    "These controls are provided for demo and evaluation purposes."
+                )
         with st.container(border=True, key="current_review"):
             st.write(st.session_state["review_text"])
         post_count = st.session_state.get("current_post_count", DEMO_POST_COUNT)
@@ -519,7 +924,11 @@ with moderation_tab:
         if result and analyzed_text == st.session_state["review_text"]:
             neighbor_conf = st.session_state.get("analysis_neighbor_signal", 0.0)
             risk = apply_thresholds(result["final_score"], high_cut, med_cut)
-            color = {"HIGH": "red", "MEDIUM": "orange", "LOW": "green"}[risk]
+            color = {
+                "HIGH": "#c62828",
+                "MEDIUM": "#b77900",
+                "LOW": "#2e7d32",
+            }[risk]
 
 
 
@@ -563,57 +972,76 @@ with moderation_tab:
                     f"{st.session_state['moderator_decision']}."
                 )
 
-            st.subheader("Moderation Result")
-            with st.expander("How scoring works"):
-                matched_signal_count = sum(
-                    1
-                    for rule in result.get("rules_detail", [])
-                    if rule.get("score", 0) > 0
+            result_heading, scoring_control = st.columns(
+                [0.58, 0.42],
+                vertical_alignment="center",
+            )
+            with result_heading:
+                st.subheader("Moderation Result")
+            with scoring_control:
+                with st.expander("How scoring works"):
+                    matched_signal_count = sum(
+                        1
+                        for rule in result.get("rules_detail", [])
+                        if rule.get("score", 0) > 0
+                    )
+                    base_score = (
+                        result["alpha"] * result["rule_score"]
+                        + result["beta"] * neighbor_conf
+                    )
+                    applied_adjustment = max(
+                        0.0,
+                        result["final_score"] - base_score,
+                    )
+                    st.write(
+                        "The risk score combines policy evidence with similarity to "
+                        "historical cases. Multiple distinct policy signals increase "
+                        "review priority. It supports—but does not make—the "
+                        "moderator's decision."
+                    )
+                    st.write(
+                        f"**Policy evidence:** "
+                        f"{signal_strength(result['rule_score'])} · "
+                        f"{matched_signal_count} matched signals"
+                    )
+                    st.write(
+                        f"**Historical similarity:** {neighbor_conf * 100:.0f}%"
+                    )
+                    st.write(
+                        f"**Multiple-signal adjustment:** "
+                        f"+{applied_adjustment * 100:.0f} points"
+                    )
+                    st.write(
+                        f"**Overall risk score:** "
+                        f"{result['final_score'] * 100:.0f}% · {risk.title()}"
+                    )
+                    st.caption(
+                        f"Policy evidence weight: {result['alpha']:.0%} · "
+                        f"Historical similarity weight: {result['beta']:.0%} · "
+                        "+10 points per additional policy signal · "
+                        f"High ≥ {high_cut:.0%} · Medium ≥ {med_cut:.0%}"
+                    )
+            risk_summary, risk_scale = st.columns(
+                [0.24, 0.76],
+                gap="small",
+                vertical_alignment="center",
+            )
+            with risk_summary:
+                st.markdown(
+                    "<div style='display:flex; align-items:center; gap:0.65rem;'>"
+                    f"<span style='background:{color}; color:white; "
+                    "font-size:1rem; font-weight:700; padding:0.25rem 0.65rem; "
+                    f"border-radius:999px;'>{risk.title()}</span>"
+                    f"<span style='font-size:1.5rem; font-weight:700;'>"
+                    f"{round(result['final_score'] * 100)}%</span></div>",
+                    unsafe_allow_html=True,
                 )
-                base_score = (
-                    result["alpha"] * result["rule_score"]
-                    + result["beta"] * neighbor_conf
-                )
-                applied_adjustment = max(
-                    0.0,
-                    result["final_score"] - base_score,
-                )
-                st.write(
-                    "The risk score combines policy evidence with similarity to "
-                    "historical cases. Multiple distinct policy signals increase "
-                    "review priority. It supports—but does not make—the moderator's "
-                    "decision."
-                )
-                st.write(
-                    f"**Policy evidence:** {signal_strength(result['rule_score'])} · "
-                    f"{matched_signal_count} matched signals"
-                )
-                st.write(
-                    f"**Historical similarity:** {neighbor_conf * 100:.0f}%"
-                )
-                st.write(
-                    f"**Multiple-signal adjustment:** "
-                    f"+{applied_adjustment * 100:.0f} points"
-                )
-                st.write(
-                    f"**Overall risk score:** {result['final_score'] * 100:.0f}% · "
-                    f"{risk.title()}"
-                )
+            with risk_scale:
+                render_risk_scale(result["final_score"], high_cut, med_cut)
                 st.caption(
-                    f"Policy evidence weight: {result['alpha']:.0%} · "
-                    f"Historical similarity weight: {result['beta']:.0%} · "
-                    "+10 points per additional policy signal · "
-                    f"High ≥ {high_cut:.0%} · Medium ≥ {med_cut:.0%}"
+                    "This score indicates review risk; it is not a model "
+                    "confidence score."
                 )
-            st.markdown(
-                f"**Risk level:** <span style='color:{color}'><b>{risk}</b></span>",
-                unsafe_allow_html=True,
-            )
-            st.metric("Risk score", f"{round(result['final_score'] * 100)}%")
-            render_risk_scale(result["final_score"], high_cut, med_cut)
-            st.caption(
-                "This score indicates review risk; it is not a model confidence score."
-            )
 
             if st.session_state.get("analysis_used_fallback"):
                 st.warning(
@@ -623,30 +1051,19 @@ with moderation_tab:
 
             st.subheader("Matched Policy Signals")
             likely = result.get("likely_reasons", [])
-            if not likely:
-                st.caption("No policy signals were matched.")
-            for signal in likely:
-                review_note = (
-                    " — verify manually"
-                    if signal.get("requires_human_review")
-                    else ""
+            signal_scores = {
+                signal.get("reason_id", signal.get("reason_label")): float(
+                    signal.get("score", 0)
                 )
-                score = float(signal.get("score", 0))
-                st.markdown(
-                    f"**{signal['reason_label']}** · "
-                    f"{signal_strength(score)} signal ({score:.0%}){review_note}"
-                )
-                st.progress(score)
-
-
-            st.subheader("Why this was flagged")
+                for signal in likely
+            }
             triggered_rules = [
                 rule
                 for rule in result.get("rules_detail", [])
                 if rule.get("score", 0) > 0
             ]
             if not triggered_rules:
-                st.caption("No rule-based evidence was found.")
+                st.caption("No policy signals were matched.")
             for row_start in range(0, len(triggered_rules), 3):
                 row_rules = triggered_rules[row_start : row_start + 3]
                 evidence_columns = st.columns(3)
@@ -657,7 +1074,23 @@ with moderation_tab:
                             border=True,
                             key=f"evidence_card_{card_index}",
                         ):
-                            st.markdown(f"**{rule['reason_label']}**")
+                            signal_key = rule.get(
+                                "reason_id", rule.get("reason_label")
+                            )
+                            score = signal_scores.get(
+                                signal_key,
+                                float(rule.get("score", 0)),
+                            )
+                            st.markdown(
+                                "<div style='display:flex; align-items:flex-start; "
+                                "justify-content:space-between; gap:0.5rem; "
+                                "font-size:1rem; font-weight:700; line-height:1.4;'>"
+                                f"<span>{rule['reason_label']}</span>"
+                                f"<span style='flex-shrink:0; text-align:right;'>"
+                                f"{score:.0%}</span></div>",
+                                unsafe_allow_html=True,
+                            )
+                            st.progress(score)
                             if rule.get("matched_phrases"):
                                 st.markdown("**Matched phrases**")
                                 st.write(
@@ -686,36 +1119,87 @@ with moderation_tab:
                     "Similar cases are unavailable for this analysis. "
                     "Use Retry to search again."
                 )
+            fallback_risk_scores = {"HIGH": 0.82, "MEDIUM": 0.58, "LOW": 0.28}
+            case_medium_pct = max(0.0, min(float(med_cut), 1.0)) * 100
+            case_high_pct = max(
+                case_medium_pct,
+                min(float(high_cut), 1.0) * 100,
+            )
             for case_number, item in enumerate(similar_cases, start=1):
-                with st.expander(
-                    f"Case {item['case_id']} · {item['similarity']:.0%} similar · "
-                    f"{item['policy_category']}",
-                    expanded=case_number == 1,
-                ):
-                    st.caption(
-                        f"Case ID: {item['case_id']} | User ID: {item['user_id']}"
-                    )
-                    st.write(item["text"])
-                    risk_level = item["risk_level"]
-                    risk_color = {
-                        "HIGH": "#c62828",
-                        "MEDIUM": "#b77900",
-                        "LOW": "#2e7d32",
-                    }[risk_level]
-                    st.markdown(
-                        f"**Risk level:** "
-                        f"<span style='color:{risk_color}'><b>{risk_level.title()}</b></span>",
-                        unsafe_allow_html=True,
-                    )
-                    decision = item["past_decision"]
-                    if decision == "Flag":
-                        st.error("Past decision: Flag")
-                    elif decision == "Escalate":
-                        st.warning("Past decision: Escalate")
-                    else:
-                        st.success("Past decision: Pass")
+                risk_level = item["risk_level"]
+                risk_color = {
+                    "HIGH": "#c62828",
+                    "MEDIUM": "#b77900",
+                    "LOW": "#2e7d32",
+                }[risk_level]
+                risk_score = item.get(
+                    "risk_score",
+                    fallback_risk_scores[risk_level],
+                )
+                risk_score_pct = max(0.0, min(float(risk_score), 1.0)) * 100
+                decision = item["past_decision"]
+                decision_class = decision.lower()
+                expanded = " open" if case_number == 1 else ""
+                policy_category = html.escape(str(item["policy_category"]))
+                review_content = html.escape(str(item["text"]))
+                case_id = html.escape(str(item["case_id"]))
+                user_id = html.escape(str(item["user_id"]))
+                st.markdown(
+                    f"""
+                    <details class="similar-case-card"{expanded}>
+                        <summary>
+                            <span class="similar-case-heading">
+                                <span class="similar-case-chevron">⌄</span>
+                                <span>{item['similarity']:.0%} {policy_category}</span>
+                            </span>
+                            <span class="similar-case-decision {decision_class}">
+                                {decision}
+                            </span>
+                        </summary>
+                        <div class="similar-case-body">
+                            <div class="similar-case-risk-row">
+                                <div class="similar-case-risk-summary">
+                                    <span class="similar-case-risk-label"
+                                          style="background:{risk_color};">
+                                        {risk_level.title()}
+                                    </span>
+                                    <span class="similar-case-risk-score">
+                                        {risk_score:.0%}
+                                    </span>
+                                </div>
+                                <div class="similar-case-risk-scale">
+                                    <div class="similar-case-risk-track"
+                                         style="background:linear-gradient(
+                                            90deg,
+                                            #2e7d32 0%,
+                                            #2e7d32 {case_medium_pct}%,
+                                            #f9a825 {case_medium_pct}%,
+                                            #f9a825 {case_high_pct}%,
+                                            #c62828 {case_high_pct}%,
+                                            #c62828 100%);">
+                                        <span class="similar-case-risk-marker"
+                                              style="left:calc(
+                                                {risk_score_pct}% - 6px);">
+                                        </span>
+                                    </div>
+                                    <div class="similar-case-risk-labels">
+                                        <span>Low</span>
+                                        <span>Medium</span>
+                                        <span>High</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="similar-case-review">{review_content}</div>
+                            <div class="similar-case-meta">
+                                Case ID: {case_id} | User ID: {user_id}
+                            </div>
+                        </div>
+                    </details>
+                    """,
+                    unsafe_allow_html=True,
+                )
 
-    with right:
+    with queue_column:
         st.header("Moderation Queue")
         st.caption(
             "Select any review to open it in Moderation and refresh its analysis."
