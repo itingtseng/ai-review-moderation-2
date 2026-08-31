@@ -6,6 +6,7 @@
 # ------------------------------------------------------------
 
 import html
+import re
 from typing import List
 
 import streamlit as st
@@ -202,6 +203,34 @@ def signal_strength(score: float) -> str:
     if score >= 0.40:
         return "Moderate"
     return "Weak"
+
+
+def highlight_review_matches(review_text: str, rules_detail: List[dict]) -> str:
+    """Return escaped review HTML with detected phrases highlighted."""
+    phrases = {
+        str(phrase).strip()
+        for rule in rules_detail
+        for phrase in rule.get("matched_phrases", [])
+        if str(phrase).strip()
+    }
+    if not phrases:
+        return html.escape(review_text)
+
+    phrase_pattern = re.compile(
+        "|".join(re.escape(phrase) for phrase in sorted(phrases, key=len, reverse=True)),
+        re.IGNORECASE,
+    )
+    highlighted_parts = []
+    last_end = 0
+    for match in phrase_pattern.finditer(review_text):
+        highlighted_parts.append(html.escape(review_text[last_end : match.start()]))
+        highlighted_parts.append(
+            "<span class='current-review-match'>"
+            f"{html.escape(match.group(0))}</span>"
+        )
+        last_end = match.end()
+    highlighted_parts.append(html.escape(review_text[last_end:]))
+    return "".join(highlighted_parts)
 
 
 def render_risk_scale(score: float, high: float, med: float) -> None:
@@ -422,6 +451,11 @@ st.markdown(
     /* Policy evidence cards */
     [class*="st-key-evidence_card_"] {
         min-height: 210px;
+    }
+
+    .current-review-match,
+    .current-review-match a {
+        color: #dc2626 !important;
     }
 
     /* Similar historical case cards */
@@ -909,8 +943,21 @@ with moderation_tab:
                 st.caption(
                     "These controls are provided for demo and evaluation purposes."
                 )
+        review_result = st.session_state.get("analysis_result") or {}
+        review_rules = (
+            review_result.get("rules_detail", [])
+            if st.session_state.get("analyzed_text")
+            == st.session_state["review_text"]
+            else []
+        )
         with st.container(border=True, key="current_review"):
-            st.write(st.session_state["review_text"])
+            st.markdown(
+                highlight_review_matches(
+                    st.session_state["review_text"],
+                    review_rules,
+                ),
+                unsafe_allow_html=True,
+            )
         post_count = st.session_state.get("current_post_count", DEMO_POST_COUNT)
         post_word = "Post" if post_count == 1 else "Posts"
         st.caption(
@@ -1095,7 +1142,7 @@ with moderation_tab:
                                 st.markdown("**Matched phrases**")
                                 st.write(
                                     " · ".join(
-                                        f'“{phrase}”'
+                                        f"“{phrase}”"
                                         for phrase in rule["matched_phrases"]
                                     )
                                 )
