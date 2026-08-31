@@ -1043,34 +1043,48 @@ with moderation_tab:
                         0.0,
                         result["final_score"] - base_score,
                     )
-                    st.write(
-                        "The risk score combines policy evidence with similarity to "
-                        "historical cases. Multiple distinct policy signals increase "
-                        "review priority. It supports—but does not make—the "
-                        "moderator's decision."
+                    similar_case_count = len(
+                        st.session_state.get("similar_cases", [])
                     )
                     st.write(
-                        f"**Policy evidence:** "
-                        f"{signal_strength(result['rule_score'])} · "
-                        f"{matched_signal_count} matched signals"
+                        f"This review matched {matched_signal_count} policy signals. "
+                        "Similar historical cases provide supporting context, and "
+                        "multiple policy matches increase review priority. The score "
+                        "supports—but does not make—the moderator's decision."
                     )
                     st.write(
-                        f"**Historical similarity:** {neighbor_conf * 100:.0f}%"
+                        f"**Policy signals matched:** {matched_signal_count}"
                     )
                     st.write(
-                        f"**Multiple-signal adjustment:** "
-                        f"+{applied_adjustment * 100:.0f} points"
+                        f"**Historical context:** {similar_case_count} similar cases found"
                     )
                     st.write(
                         f"**Overall risk score:** "
                         f"{result['final_score'] * 100:.0f}% · {risk.title()}"
                     )
-                    st.caption(
-                        f"Policy evidence weight: {result['alpha']:.0%} · "
-                        f"Historical similarity weight: {result['beta']:.0%} · "
-                        "+10 points per additional policy signal · "
-                        f"High ≥ {high_cut:.0%} · Medium ≥ {med_cut:.0%}"
-                    )
+                    with st.expander("Technical details"):
+                        policy_contribution = (
+                            result["alpha"] * result["rule_score"]
+                        )
+                        similarity_contribution = result["beta"] * neighbor_conf
+                        st.write(
+                            f"Policy evidence: {result['rule_score']:.0%} signal × "
+                            f"{result['alpha']:.0%} weight = "
+                            f"{policy_contribution * 100:.0f} points"
+                        )
+                        st.write(
+                            f"Historical cases: {neighbor_conf:.0%} aggregated "
+                            f"similarity signal × {result['beta']:.0%} weight = "
+                            f"{similarity_contribution * 100:.0f} points"
+                        )
+                        st.write(
+                            f"Multiple policy matches: "
+                            f"+{applied_adjustment * 100:.0f} points"
+                        )
+                        st.caption(
+                            "+10 points per additional policy signal · "
+                            f"High ≥ {high_cut:.0%} · Medium ≥ {med_cut:.0%}"
+                        )
             risk_summary, risk_scale = st.columns(
                 [0.24, 0.76],
                 gap="small",
