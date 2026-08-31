@@ -1026,7 +1026,10 @@ with moderation_tab:
             with result_heading:
                 st.subheader("Moderation Result")
             with scoring_control:
-                with st.expander("How scoring works"):
+                with st.popover(
+                    "How scoring works",
+                    use_container_width=True,
+                ):
                     matched_signal_count = sum(
                         1
                         for rule in result.get("rules_detail", [])
