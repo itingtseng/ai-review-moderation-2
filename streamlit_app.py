@@ -771,6 +771,46 @@ st.markdown(
         color: inherit !important;
         background: transparent !important;
     }
+
+    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
+      > div[data-testid="stColumn"]:nth-child(1) button:hover {
+        color: #dc2626 !important;
+        background: rgba(220, 38, 38, 0.2) !important;
+    }
+    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
+      > div[data-testid="stColumn"]:nth-child(1) button:hover p {
+        color: #dc2626 !important;
+    }
+
+    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
+      > div[data-testid="stColumn"]:nth-child(2) button:hover {
+        color: #d69e00 !important;
+        background: rgba(214, 158, 0, 0.2) !important;
+    }
+    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
+      > div[data-testid="stColumn"]:nth-child(2) button:hover p {
+        color: #d69e00 !important;
+    }
+
+    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
+      > div[data-testid="stColumn"]:nth-child(3) button:hover {
+        color: #16a34a !important;
+        background: rgba(22, 163, 74, 0.2) !important;
+    }
+    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
+      > div[data-testid="stColumn"]:nth-child(3) button:hover p {
+        color: #16a34a !important;
+    }
+
+    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
+      > div[data-testid="stColumn"]:nth-child(4) button:hover {
+        color: #2563eb !important;
+        background: rgba(37, 99, 235, 0.2) !important;
+    }
+    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
+      > div[data-testid="stColumn"]:nth-child(4) button:hover p {
+        color: #2563eb !important;
+    }
     </style>
     """,
     unsafe_allow_html=True,
