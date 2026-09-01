@@ -1205,7 +1205,15 @@ with moderation_tab:
                 decision_class = decision.lower()
                 expanded = " open" if case_number == 1 else ""
                 policy_category = html.escape(str(item["policy_category"]))
-                review_content = html.escape(str(item["text"]))
+                case_text = str(item["text"])
+                case_rule_result = engine.decide(
+                    case_text,
+                    neighbor_conf=0.0,
+                )
+                review_content = highlight_review_matches(
+                    case_text,
+                    case_rule_result.get("rules_detail", []),
+                )
                 case_id = html.escape(str(item["case_id"]))
                 user_id = html.escape(str(item["user_id"]))
                 st.markdown(
