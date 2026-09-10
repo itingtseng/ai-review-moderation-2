@@ -1,271 +1,284 @@
-# 🛡️ AI Review Moderation 2.0  
-**Explainable Trust & Safety Moderation (Rules + Lexicons + Semantic Neighbors)**
+# 🛡️ Verdict AI
 
-A lightweight, end-to-end demo for **review moderation** that combines:
+**An explainable review-moderation and human-review workflow prototype**
 
-✅ Rule-based scoring  
-✅ Lexicon phrase matching  
-✅ Regex pattern detection (URL / email / phone / PII)  
-✅ Semantic similarity (vector neighbors)  
-✅ Explainable risk cards  
-✅ Human-in-the-loop routing (HITL)  
+Verdict AI combines deterministic policy rules with semantic similar-case retrieval to help moderators inspect potentially problematic reviews. Instead of presenting a black-box prediction, the interface shows the policy signals, matched text patterns, related examples, and a heuristic risk tier behind each result.
 
-The system produces **flag/not-flag** decisions with:
-- Human-readable explanations
-- Triggered rules
-- Matching phrases
-- Similar past cases (when available)
+> **Prototype scope:** Verdict AI is a decision-support demo, not a production moderation service. Its scores are heuristic evidence scores—not calibrated probabilities, accuracy estimates, or final policy judgments.
 
----
+## 🎯 Live Prototype
 
-## 🏛 Architecture Overview
+[Open the Streamlit prototype](https://ai-review-moderation-2-hdqedtqcmlbagcmiewmebt.streamlit.app)
 
-   User Text
-      ↓
-Text Preprocessing
-      ↓
-Phrase / Rule Matching  (weighted α)
-      ↓
-Semantic Neighbors     (weighted β)
-      ↓
-Score Blending (α·rules + β·neighbors)
-      ↓
-Decision Tiering (LOW / MEDIUM / HIGH)
-      ↓
-Explainability Cards
+The deployed prototype demonstrates the implemented analysis workflow. Some queue, analytics, historical-outcome, and moderator metadata are synthetic and are included only to demonstrate the intended product experience.
 
+## ✨ What the Prototype Demonstrates
 
-When full historical data is available, semantic neighbors boost signal quality.  
-When data is restricted (privacy), the engine **gracefully degrades** into rule-only mode.
+- **Auditable policy rules:** category-specific keywords, phrases, regex patterns, and weights stored in YAML
+- **Matched policy signals:** visible keyword and regex evidence, including URLs, email addresses, phone numbers, and other configured patterns
+- **Semantic similar-case retrieval:** SentenceTransformer embeddings and FAISS nearest-neighbor search
+- **Evidence-based risk presentation:** Low, Medium, and High heuristic risk tiers
+- **Explainable results:** triggered rules, matched phrases, detected patterns, and retrieved examples
+- **Human-review workflow prototype:** a demo queue with Flag, Escalate, Approve, and Retry actions
+- **Degraded operation:** the interface can continue with rule evidence when semantic retrieval is unavailable, although fallback scoring remains prototype-level
 
----
+## 🏛️ System Architecture
+
+```mermaid
+flowchart TD
+    A[Review text] --> B[Policy rules]
+    A --> C[Sentence embedding]
+    B --> D[Rule evidence score]
+    C --> E[FAISS similar-case retrieval]
+    E --> F[Neighbor evidence score]
+    D --> G[Heuristic risk score]
+    F --> G
+    G --> H[Evidence cards and risk tier]
+    H --> I[Moderator action]
+```
+
+The primary Streamlit application runs the rule engine and semantic retriever directly. It does not require an LLM to generate its main moderation result.
+
+## 🧮 How Scoring Works
+
+### Rule evidence
+
+Each policy category has a configured heuristic weight in `app/rules.yml`. A matching keyword or regex pattern activates that rule's weight. Activated rule scores are added and capped at `1.0`.
+
+Regex matches can be treated as strong evidence by the Streamlit prototype. For example, a detected phone number or email address can strengthen a matching policy signal.
+
+### Neighbor evidence
+
+The semantic retriever:
+
+1. Converts the submitted review into an embedding using `sentence-transformers/all-MiniLM-L6-v2`.
+2. Uses FAISS inner-product search over normalized reference embeddings.
+3. Retrieves the five closest reviews by default.
+4. Averages their raw similarity values.
+5. Maps that average to a bounded `0–1` neighbor evidence score.
+
+The neighbor score measures similarity to the available reference corpus. It does **not** independently mean that a review has a particular probability of violating policy, and it does not necessarily measure similarity to confirmed flagged reviews.
+
+### Final risk presentation
+
+Rule and neighbor evidence are combined using prototype heuristics. The default configuration gives rule evidence more influence than neighbor evidence. The resulting value is mapped to:
+
+| Risk tier | Prototype threshold |
+|---|---:|
+| High | `≥ 0.70` |
+| Medium | `≥ 0.40` and `< 0.70` |
+| Low | `< 0.40` |
+
+These thresholds and weights have not been statistically calibrated. The displayed score must not be interpreted as confidence, model accuracy, or the probability that a review violates policy.
+
+## 🧩 Policy Categories
+
+The YAML rule set contains prototype signals for all nine report-reason categories:
+
+| ID | Policy category | Human-review designation in the rule engine |
+|---:|---|---|
+| 1 | Wrong Community | Yes |
+| 2 | Off-topic / Irrelevant | No |
+| 3 | False Information | Yes |
+| 4 | Affiliated with Community | Yes |
+| 5 | Competitor / Ex-employee | Yes |
+| 6 | Toxic / Hate / Lewd | No |
+| 7 | Privacy / PII | No |
+| 8 | Promotion / Advertising | No |
+| 9 | COVID-related content | No |
+
+This table describes the current code configuration, not validated category performance. Some categories—such as false information, affiliation, identity, or misinformation—cannot be reliably verified from review text alone and require human judgment or additional evidence.
+
+## 🔍 Explainability and Moderator Experience
+
+For each analyzed review, the interface can show:
+
+- Overall heuristic risk tier and score
+- Matched policy categories
+- Rule weights
+- Matched keywords and phrases
+- Detected regex patterns
+- Semantic neighbor evidence
+- Retrieved review text
+- Recommended human-review status
+
+The Queue tab demonstrates the intended review workflow. Moderator actions currently update Streamlit session state only; they are not persisted to a database or external case-management system.
+
+Historical decisions, risk labels, analytics, and queue records shown in the interface include synthetic demo metadata. Retrieved review text is selected through semantic search, but the displayed historical outcome is not guaranteed to be the actual moderation outcome of that retrieved record.
+
+## 🧠 Lexicon Exploration
+
+The notebooks include an experimental workflow for:
+
+- N-gram candidate extraction
+- Class-conditional frequency comparison
+- Log-odds-based phrase ranking
+- Manual inspection of candidate lexicons
+
+Generated candidates are research artifacts. They are **not automatically promoted** into the runtime rule set; production rules still require manual review and inclusion in `app/rules.yml`.
 
 ## 🔧 Tech Stack
 
-- **Frontend**: Streamlit
-- **Reasoning Engine**: Python + lexicon scoring
-- **Semantic Retrieval**: sentence-transformers + FAISS (optional)
-- **Rules / Lexicons**: YAML (auditable, editable)
-- **Documentation**: PRD, Model Card
+| Area | Technology |
+|---|---|
+| Application UI | Streamlit |
+| Core logic | Python |
+| Rules and lexicons | YAML, keywords, regex |
+| Sentence embeddings | SentenceTransformers (`all-MiniLM-L6-v2`) |
+| Vector retrieval | FAISS |
+| Data exploration | pandas, scikit-learn, Jupyter |
+| Experimental API | FastAPI |
+| Experimental LLM path | OpenAI API |
 
-(No raw data is included due to privacy constraints; see Degradation Modes below.)
+No Dify, Coze, LangChain, LangGraph, CrewAI, or AutoGen framework is used in this repository.
 
----
+## 🗂️ Project Structure
 
-## 🗂 Project Structure
+```text
+.
+├── app/
+│   ├── decision.py              # Policy matching and heuristic scoring
+│   ├── neighbor.py              # SentenceTransformer + FAISS retrieval
+│   └── rules.yml                # Runtime policy rules and weights
+├── backend/
+│   ├── app.py                   # Experimental FastAPI endpoint
+│   ├── classifier.py            # Experimental retrieval + LLM classifier
+│   └── retriever.py             # Experimental backend retriever
+├── frontend/
+│   └── streamlit_app.py         # Alternate API-based frontend
+├── data/
+│   ├── samples/
+│   │   └── sample_reviews.csv   # Small reference corpus used by the demo
+│   ├── labeled/                 # Experimental labeled artifacts
+│   └── debug/                   # Data-quality debugging artifacts
+├── docs/
+│   ├── PRD.md
+│   └── model_card.md
+├── notebooks/
+│   ├── 01_exploratory_iteration.ipynb
+│   ├── 02_data_cleaning.ipynb
+│   └── 03_generate_rules_keywords.ipynb
+├── streamlit_app.py             # Primary Verdict AI prototype
+└── requirements.txt
+```
 
-app/
-  decision.py          # core scoring engine
-  neighbor.py          # FAISS wrapper + fallback
-  rules.yml            # curated rules/lexicons
-  rules_generated.yml  # auto-expanded lexicons
-  sample_reviews.csv   # small public sample corpus (optional)
-streamlit_app.py       # demo UI
-docs/
-  PRD.md
-  model_card.md
-notebooks/
-  01_exploratory_iteration.ipynb
-  02_rule_mining.ipynb
-  03_lexicon_growth.ipynb
+## 🚀 Run Locally
 
----
+### 1. Create and activate a virtual environment
 
-## 🚀 Quick Start
-
-### 1) Environment
 ```bash
-python -m venv .venv && source .venv/bin/activate
+python -m venv .venv
+source .venv/bin/activate
+```
+
+On Windows:
+
+```powershell
+.venv\Scripts\activate
+```
+
+### 2. Install dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
-### 2) Run UI
+### 3. Start the primary prototype
+
 ```bash
 streamlit run streamlit_app.py
 ```
 
----
+## 📥 Reference Data
 
+The primary semantic retriever expects a CSV containing:
 
-## 📥 Data Requirements
-
-### Optional
-`sample_reviews.csv`
-
-Used to build a tiny semantic index for neighbor scoring.
-
-Replace with:
-```bash
-id,text,vote_reason_id
-```
-> Raw enterprise data is **not** included in this repo due to privacy.
-
----
-
-## 🧠 Graceful Degradation (Important!)
-
-This system supports **privacy-aware downgrade modes**:
-
-| Mode    | What’s Available         | Behavior                                      |
-|---------|--------------------------|-----------------------------------------------|
-| Full    | Raw historical corpus    | Rules + Lexicons + Semantic Neighbors         |
-| Mid     | sample_reviews.csv only  | Local semantic similarity                     |
-| Minimal | No corpus                | Pure rules engine (still explainable!)        |
-
-High-signal categories remain stable:
-
-- Promotion / Advertising
-- Toxic / Harassment
-- Privacy / PII
-- COVID misinformation
-
-Ambiguous categories (e.g., Off-topic) route to HITL (Human-In-The-Loop).
-
----
-
-## 🔍 Explainability Cards
-
-For every decision, the UI shows:
-
-- Category risk
-- Extracted phrases
-- Lexicon matches
-- Regex hits (URL/email/phone)
-- Neighbor evidence (when available)
-- Final blended score
-
-This makes decisions **auditable** and **transparent**.
-
----
-
-## 🧩 Categories Covered
-
-| vote_reason_id | Category               | Auto-manageable?                               |
-|----------------|------------------------|------------------------------------------------|
-| 2              | Off-topic              | ✅ (weak signal → relies on neighbors)         |
-| 6              | Toxic / Hate / Lewd    | ✅                                             |
-| 7              | Privacy / PII          | ✅                                             |
-| 8              | Promotional content    | ✅                                             |
-| 9              | COVID / misinformation | ✅                                             |
-
-Other flag types are intentionally **excluded** (not machine-verifiable).
-
----
-
-## 📈 Evaluation
-
-See `docs/model_card.md` for:
-
-- precision / recall / F1
-- false positive analysis
-- category-wise breakdown
-
----
-
-## 🧪 Lexicon Growth (Auto-Mining)
-
-Notebooks mine phrases using:
-
-- log-odds ratio enrichment
-- multi-gram extraction
-- class-conditional frequency
-- typo clustering
-
-The engine expands:
-```bash
-rules_lexicons.yml
-rules_generated.yml
+```text
+review_text,vote_reason_id
 ```
 
-These can be manually audited.
+By default, it can use:
 
----
+```text
+data/samples/sample_reviews.csv
+```
 
-## 👁‍🗨 Human-In-The-Loop (HITL)
+An alternate corpus path can be supplied through the `DATA_PATH` environment variable. If a usable corpus or embedding model is unavailable, the interface catches the retrieval error and continues with rule evidence.
 
-Ambiguous scores route to human review:
+## 🧪 Experimental RAG/LLM Backend
 
-- Score thresholding
-- Confidence display
-- Neighbor examples
+The `backend/` directory contains a separate experimental path that retrieves related cases and includes them in an OpenAI prompt. This is a RAG-style classification experiment, but it is **not connected to the primary root-level Streamlit application** and its required backend index artifacts are not included.
 
-This mimics real Trust & Safety queues.
+Accordingly, Verdict AI's current primary demo should be described as:
 
----
+> **Rules + semantic similar-case retrieval**
 
-## 🔐 Privacy Notes
+rather than as a complete production RAG or agent system.
 
-- Raw enterprise datasets are not stored in this repo
-- Only synthetic/public sample CSV is included
-- Model degradation preserves explainability
+## 📊 Evaluation Status
 
----
+No validated accuracy, precision, recall, F1, latency, or retrieval-quality result is claimed in this repository.
 
-## 🧯 Risk / Failure Modes
+`docs/PRD.md` and `docs/model_card.md` describe intended evaluation criteria and future targets. A credible evaluation would require:
 
-- Off-topic ambiguity without semantic evidence
-- Novel promotion tactics unseen in lexicon
-- Evasive toxic slang evolution
+- A representative, independently labeled test set
+- Clearly defined ground-truth policy outcomes
+- Category-level precision and recall
+- False-positive and false-negative analysis
+- Retrieval relevance evaluation
+- Threshold calibration
+- Moderator workflow and time-on-task testing
 
-Documented in the Model Card.
+## 🔐 Data and Privacy Notice
 
----
+The sample corpus is intended for demonstration. The repository also contains labeled and debugging artifacts derived during experimentation, including identifiers and review text. Their authorization and redistribution status should be reviewed before the repository or its data is reused, shared, or deployed.
 
-## 🛠 For Production
+For a public or production release:
 
-Add:
+- Retain only authorized synthetic or public data
+- Remove restricted data from both the current repository and Git history
+- Exclude private datasets through `.gitignore`
+- Avoid logging submitted review text or personal information
+- Apply access control and retention policies
 
-- Rate limiting
-- AuthN/AuthZ
-- Moderation queues
-- Feedback loops
-- Bias audits
+## ⚠️ Current Limitations
 
----
+- Rule weights, score blending, and thresholds are heuristic
+- Scores are not calibrated probabilities
+- Semantic similarity is not equivalent to policy violation likelihood
+- Some rules may overlap and activate more than one category
+- Keyword rules can miss new wording or produce false positives
+- The queue and analytics experience uses synthetic demo data
+- Moderator actions are not persisted
+- No authentication, authorization, audit log, rate limiting, or production monitoring is implemented
+- The experimental backend is incomplete and separate from the primary demo
 
-## 👀 Why This Matters (Pitch)
+## 🛠️ Production Work Required
 
-This repo demonstrates:
+Before production use, the system would need:
 
-- Explainable moderation
-- Auditable YAML rules
-- Semantic retrieval (optional)
-- Privacy-aware degradation
-- Human-review queue routing
-- Safe fallback behavior
+- Authorized and versioned training/evaluation data
+- Validated scoring and calibrated thresholds
+- Persistent case storage and moderation audit logs
+- Authentication and role-based authorization
+- Queue assignment, prioritization, and escalation policies
+- Moderator feedback and appeal workflows
+- Bias, privacy, security, and abuse testing
+- Monitoring for retrieval quality, drift, latency, and failures
+- Clear policy ownership and rule-change governance
 
-Perfect for Meta / TikTok / YouTube Trust & Safety roles.
+## 🏁 Project Status
 
----
+| Component | Status |
+|---|---|
+| YAML rule engine | Implemented prototype |
+| Keyword and regex evidence | Implemented prototype |
+| SentenceTransformer + FAISS retrieval | Implemented prototype |
+| Explainability interface | Implemented prototype |
+| Moderator queue and actions | Demo only |
+| Lexicon mining | Experimental notebook workflow |
+| RAG/LLM backend | Experimental and not connected to the primary app |
+| Statistical performance validation | Not completed |
+| Production moderation infrastructure | Not implemented |
 
-## 🧳 Deployment
-
-Works on:
-
-- Local
-- Streamlit Cloud
-- GitHub Codespaces
-
-`sample_reviews.csv` enables cloud mode without private data.
-
----
-
-## 🏁 Status
-
-✅ Rule engine complete  
-✅ Lexicon auto-growth complete  
-✅ Explainability UI complete  
-✅ Degradation mode implemented  
-⬜ (Optional) raw corpus FAISS index  
-⬜ (Optional) admin review queue  
-
-Even without raw embeddings, this is a shippable demo.
-
----
-
-## 📜 License
-
-MIT.  
-Rules and lexicons are auditable and editable.
-
-
+Verdict AI is best understood as a functional portfolio prototype exploring how transparent policy evidence and similar-case retrieval can support—not replace—human moderation decisions.
