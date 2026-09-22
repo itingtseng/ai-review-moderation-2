@@ -87,7 +87,7 @@ DEMO_QUEUE = {
     "High": [
         (
             "7574",
-            "Limited time! Apply now and contact John at john@example.com. The manager was rude and called a resident an idiot.",
+            "Limited time! Apply now and contact John at john@example.com. The manager was rude and called a resident a fool.",
             "Multiple policy signals",
         ),
         (
@@ -139,7 +139,6 @@ def clear_analysis() -> None:
         "analysis_result",
         "analysis_neighbor_signal",
         "analysis_used_fallback",
-        "moderator_decision",
     ):
         st.session_state.pop(key, None)
 
@@ -165,7 +164,20 @@ def request_analysis() -> None:
 
 
 def record_moderator_decision(decision: str) -> None:
-    st.session_state["moderator_decision"] = decision
+    """Record the decision for the open review, then load the next pending one."""
+    post_id = st.session_state.get("current_post_id")
+    if post_id:
+        decisions = st.session_state.setdefault("queue_decisions", {})
+        decisions[post_id] = decision
+    advance_to_next_pending_review()
+
+
+def advance_to_next_pending_review() -> None:
+    decisions = st.session_state.get("queue_decisions", {})
+    for post_id, review_text, _category in ALL_QUEUE_ITEMS:
+        if post_id not in decisions:
+            load_demo_review(post_id, review_text, DEMO_QUEUE_USER_IDS[post_id])
+            return
 
 
 def upgrade_on_strong_evidence(per_rule: List[dict]) -> bool:
@@ -355,11 +367,11 @@ def render_queue_items(items, key_prefix: str) -> None:
             )
 
 
-def group_queue_items_by_tier() -> dict:
-    """Bucket every queue item by its live computed tier, not its static
-    demo category, so an item's filter/tab always matches its own badge."""
+def group_queue_items_by_tier(items) -> dict:
+    """Bucket queue items by their live computed tier, not a static demo
+    category, so an item's badge always matches wherever it's grouped."""
     grouped = {"High": [], "Medium": [], "Low": []}
-    for post_id, review_text, category in ALL_QUEUE_ITEMS:
+    for post_id, review_text, category in items:
         risk_score = cached_queue_risk_score(
             review_text, alpha, topk, strong_boost
         )
@@ -369,36 +381,57 @@ def group_queue_items_by_tier() -> dict:
 
 
 def render_queue_panel(key_prefix: str) -> None:
-    grouped = group_queue_items_by_tier()
-    high_items = grouped["High"]
-    medium_items = grouped["Medium"]
-    low_items = grouped["Low"]
+    decisions = st.session_state.get("queue_decisions", {})
+    pending_items = [
+        item for item in ALL_QUEUE_ITEMS if item[0] not in decisions
+    ]
+    flagged_items = [
+        item for item in ALL_QUEUE_ITEMS if decisions.get(item[0]) == "Flagged"
+    ]
+    escalated_items = [
+        item for item in ALL_QUEUE_ITEMS if decisions.get(item[0]) == "Escalated"
+    ]
+    passed_items = [
+        item for item in ALL_QUEUE_ITEMS if decisions.get(item[0]) == "Approved"
+    ]
 
     all_tab, passed_tab, flagged_tab, escalated_tab = st.tabs(
         [
-            f"Pending ({len(ALL_QUEUE_ITEMS)})",
-            f"Passed ({len(low_items)})",
-            f"Flagged ({len(high_items)})",
-            f"Escalated ({len(medium_items)})",
+            f"Pending ({len(pending_items)})",
+            f"Passed ({len(passed_items)})",
+            f"Flagged ({len(flagged_items)})",
+            f"Escalated ({len(escalated_items)})",
         ]
     )
     with all_tab:
-        for risk_group, items in (
-            ("High", high_items),
-            ("Medium", medium_items),
-            ("Low", low_items),
-        ):
-            with st.expander(
-                f"{risk_group} ({len(items)})",
-                expanded=risk_group == "High",
-            ):
-                render_queue_items(items, f"{key_prefix}_all")
+        if not pending_items:
+            st.caption("No pending reviews — all caught up!")
+        else:
+            grouped = group_queue_items_by_tier(pending_items)
+            for risk_group in ("High", "Medium", "Low"):
+                items = grouped[risk_group]
+                if not items:
+                    continue
+                with st.expander(
+                    f"{risk_group} ({len(items)})",
+                    expanded=risk_group == "High",
+                ):
+                    render_queue_items(items, f"{key_prefix}_all")
     with passed_tab:
-        render_queue_items(low_items, f"{key_prefix}_passed")
+        if not passed_items:
+            st.caption("No approved reviews yet.")
+        else:
+            render_queue_items(passed_items, f"{key_prefix}_passed")
     with flagged_tab:
-        render_queue_items(high_items, f"{key_prefix}_flagged")
+        if not flagged_items:
+            st.caption("No flagged reviews yet.")
+        else:
+            render_queue_items(flagged_items, f"{key_prefix}_flagged")
     with escalated_tab:
-        render_queue_items(medium_items, f"{key_prefix}_escalated")
+        if not escalated_items:
+            st.caption("No escalated reviews yet.")
+        else:
+            render_queue_items(escalated_items, f"{key_prefix}_escalated")
 
 
 # Default workflow opens a review immediately instead of waiting for input.
@@ -841,20 +874,32 @@ st.markdown(
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
       > div[data-testid="stColumn"]:nth-child(1) button {
         border-color: #dc2626 !important;
-        color: inherit !important;
-        background: transparent !important;
+        background: #dc2626 !important;
+        color: #ffffff !important;
+    }
+    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
+      > div[data-testid="stColumn"]:nth-child(1) button p {
+        color: #ffffff !important;
     }
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
       > div[data-testid="stColumn"]:nth-child(2) button {
         border-color: #d69e00 !important;
-        color: inherit !important;
-        background: transparent !important;
+        background: #d69e00 !important;
+        color: #ffffff !important;
+    }
+    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
+      > div[data-testid="stColumn"]:nth-child(2) button p {
+        color: #ffffff !important;
     }
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
       > div[data-testid="stColumn"]:nth-child(3) button {
         border-color: #16a34a !important;
-        color: inherit !important;
-        background: transparent !important;
+        background: #16a34a !important;
+        color: #ffffff !important;
+    }
+    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
+      > div[data-testid="stColumn"]:nth-child(3) button p {
+        color: #ffffff !important;
     }
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
       > div[data-testid="stColumn"]:nth-child(4) button {
@@ -865,32 +910,32 @@ st.markdown(
 
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
       > div[data-testid="stColumn"]:nth-child(1) button:hover {
-        color: #dc2626 !important;
-        background: rgba(220, 38, 38, 0.2) !important;
+        background: #b91c1c !important;
+        border-color: #b91c1c !important;
     }
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
       > div[data-testid="stColumn"]:nth-child(1) button:hover p {
-        color: #dc2626 !important;
+        color: #ffffff !important;
     }
 
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
       > div[data-testid="stColumn"]:nth-child(2) button:hover {
-        color: #d69e00 !important;
-        background: rgba(214, 158, 0, 0.2) !important;
+        background: #b07d00 !important;
+        border-color: #b07d00 !important;
     }
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
       > div[data-testid="stColumn"]:nth-child(2) button:hover p {
-        color: #d69e00 !important;
+        color: #ffffff !important;
     }
 
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
       > div[data-testid="stColumn"]:nth-child(3) button:hover {
-        color: #16a34a !important;
-        background: rgba(22, 163, 74, 0.2) !important;
+        background: #12833c !important;
+        border-color: #12833c !important;
     }
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
       > div[data-testid="stColumn"]:nth-child(3) button:hover p {
-        color: #16a34a !important;
+        color: #ffffff !important;
     }
 
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
@@ -988,7 +1033,6 @@ with moderation_tab:
         st.session_state["analysis_neighbor_signal"] = neighbor_conf
         st.session_state["analysis_used_fallback"] = used_fallback
         st.session_state["similar_cases"] = similar_cases
-        st.session_state.pop("moderator_decision", None)
 
     queue_column, review_column = st.columns([0.40, 0.60])
 
@@ -1109,12 +1153,6 @@ with moderation_tab:
                         use_container_width=True,
                         on_click=request_analysis,
                     )
-
-            if st.session_state.get("moderator_decision"):
-                st.success(
-                    f"Decision recorded for this demo: "
-                    f"{st.session_state['moderator_decision']}."
-                )
 
             result_heading, scoring_control = st.columns(
                 [0.68, 0.32],
