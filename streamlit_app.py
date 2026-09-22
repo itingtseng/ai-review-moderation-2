@@ -129,6 +129,7 @@ DEMO_QUEUE = {
         ),
     ],
 }
+ALL_QUEUE_ITEMS = [item for items in DEMO_QUEUE.values() for item in items]
 
 
 def clear_analysis() -> None:
@@ -354,26 +355,50 @@ def render_queue_items(items, key_prefix: str) -> None:
             )
 
 
+def group_queue_items_by_tier() -> dict:
+    """Bucket every queue item by its live computed tier, not its static
+    demo category, so an item's filter/tab always matches its own badge."""
+    grouped = {"High": [], "Medium": [], "Low": []}
+    for post_id, review_text, category in ALL_QUEUE_ITEMS:
+        risk_score = cached_queue_risk_score(
+            review_text, alpha, topk, strong_boost
+        )
+        tier = apply_thresholds(risk_score, high_cut, med_cut).title()
+        grouped[tier].append((post_id, review_text, category))
+    return grouped
+
+
 def render_queue_panel(key_prefix: str) -> None:
+    grouped = group_queue_items_by_tier()
+    high_items = grouped["High"]
+    medium_items = grouped["Medium"]
+    low_items = grouped["Low"]
+
     all_tab, passed_tab, flagged_tab, escalated_tab = st.tabs(
-        ["Pending (10)", "Passed (2)", "Flagged (5)", "Escalated (3)"]
+        [
+            f"Pending ({len(ALL_QUEUE_ITEMS)})",
+            f"Passed ({len(low_items)})",
+            f"Flagged ({len(high_items)})",
+            f"Escalated ({len(medium_items)})",
+        ]
     )
     with all_tab:
-        for risk_group, items in DEMO_QUEUE.items():
+        for risk_group, items in (
+            ("High", high_items),
+            ("Medium", medium_items),
+            ("Low", low_items),
+        ):
             with st.expander(
                 f"{risk_group} ({len(items)})",
                 expanded=risk_group == "High",
             ):
                 render_queue_items(items, f"{key_prefix}_all")
     with passed_tab:
-        render_queue_items(DEMO_QUEUE["Low"], f"{key_prefix}_passed")
+        render_queue_items(low_items, f"{key_prefix}_passed")
     with flagged_tab:
-        render_queue_items(DEMO_QUEUE["High"], f"{key_prefix}_flagged")
+        render_queue_items(high_items, f"{key_prefix}_flagged")
     with escalated_tab:
-        render_queue_items(
-            DEMO_QUEUE["Medium"],
-            f"{key_prefix}_escalated",
-        )
+        render_queue_items(medium_items, f"{key_prefix}_escalated")
 
 
 # Default workflow opens a review immediately instead of waiting for input.
