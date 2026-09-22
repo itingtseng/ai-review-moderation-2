@@ -306,7 +306,9 @@ def render_risk_scale(score: float, high: float, med: float) -> None:
             </div>
             <div style="display: flex; justify-content: space-between; margin-top: 0.35rem;
                         font-size: 0.8rem; color: #9ca3af;">
-                <span>Low</span><span>Medium</span><span>High</span>
+                <span>Low</span>
+                <span>Medium &ge; {med_pct:.0f}%</span>
+                <span>High &ge; {high_pct:.0f}%</span>
             </div>
         </div>
         """,
@@ -445,13 +447,13 @@ if "review_text" not in st.session_state:
 st.session_state.setdefault("primary_tab", "Moderation")
 
 
-st.session_state.setdefault("policy_weight", 0.60)
+st.session_state.setdefault("policy_weight_pct", 60)
 st.session_state.setdefault("high_risk_threshold", 0.70)
 st.session_state.setdefault("medium_risk_threshold", 0.40)
 st.session_state.setdefault("strong_evidence", True)
 st.session_state.setdefault("historical_topk", 5)
 
-alpha = float(st.session_state["policy_weight"])
+alpha = float(st.session_state["policy_weight_pct"]) / 100.0
 high_cut = float(st.session_state["high_risk_threshold"])
 med_cut = float(st.session_state["medium_risk_threshold"])
 strong_boost = bool(st.session_state["strong_evidence"])
@@ -1098,10 +1100,11 @@ with moderation_tab:
             ):
                 st.slider(
                     "Policy signal weight",
-                    0.0,
-                    1.0,
-                    step=0.05,
-                    key="policy_weight",
+                    0,
+                    100,
+                    step=5,
+                    format="%d%%",
+                    key="policy_weight_pct",
                 )
                 st.slider(
                     "High-risk threshold",
@@ -1445,8 +1448,8 @@ with moderation_tab:
                                     </div>
                                     <div class="similar-case-risk-labels">
                                         <span>Low</span>
-                                        <span>Medium</span>
-                                        <span>High</span>
+                                        <span>Medium &ge; {case_medium_pct:.0f}%</span>
+                                        <span>High &ge; {case_high_pct:.0f}%</span>
                                     </div>
                                 </div>
                             </div>
