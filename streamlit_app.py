@@ -45,18 +45,6 @@ DEMO_QUEUE_USER_IDS = {
     "3310": "90521",
     "2048": "72618",
 }
-DEMO_QUEUE_RISK_SCORES = {
-    "7574": 0.89,
-    "1114": 0.84,
-    "1116": 0.82,
-    "0930": 0.76,
-    "0117": 0.73,
-    "0610": 0.64,
-    "0704": 0.57,
-    "0814": 0.48,
-    "3310": 0.31,
-    "2048": 0.24,
-}
 HISTORICAL_CASE_METADATA = [
     {
         "case_id": "0548",
@@ -188,6 +176,57 @@ def upgrade_on_strong_evidence(per_rule: List[dict]) -> bool:
     return changed
 
 
+def analyze_review_text(review_text: str) -> dict:
+    """Run the same policy + similarity pipeline used by the Moderation panel.
+
+    Shared by the analysis flow and the Queue's risk badges so the score shown
+    in the queue always matches what moderators see once they open the review.
+    """
+    used_fallback = False
+    if nbr is not None:
+        try:
+            neighbor_conf, neighbors = nbr.search(review_text, k=topk)
+        except Exception:
+            neighbor_conf, neighbors = 0.0, []
+            used_fallback = True
+    else:
+        neighbor_conf, neighbors = 0.0, []
+        used_fallback = True
+
+    result = engine.decide(review_text, neighbor_conf=neighbor_conf)
+
+    if strong_boost and upgrade_on_strong_evidence(result.get("rules_detail", [])):
+        rule_score = min(
+            sum(rule.get("score", 0) for rule in result["rules_detail"]),
+            1.0,
+        )
+        triggered_count = sum(
+            1
+            for rule in result["rules_detail"]
+            if rule.get("score", 0) > 0
+        )
+        weighted_score = engine.alpha * rule_score + engine.beta * neighbor_conf
+        multi_signal_boost = 0.10 * max(0, triggered_count - 1)
+        final_score = min(0.95, weighted_score + multi_signal_boost)
+        result["rule_score"] = round(rule_score, 3)
+        result["final_score"] = round(final_score, 3)
+
+    return {
+        "result": result,
+        "neighbor_conf": neighbor_conf,
+        "neighbors": neighbors,
+        "used_fallback": used_fallback,
+    }
+
+
+@st.cache_data(show_spinner=False)
+def cached_queue_risk_score(
+    review_text: str, alpha_key: float, topk_key: int, strong_boost_key: bool
+) -> float:
+    """Cached wrapper so queue cards don't re-run the pipeline on every rerun."""
+    return analyze_review_text(review_text)["result"]["final_score"]
+
+
 def apply_thresholds(final_score: float, high: float, med: float) -> str:
     if final_score >= high:
         return "HIGH"
@@ -278,10 +317,16 @@ def queue_button_label(
     )
 
 
-def render_queue_items(items, key_prefix: str, risk_group: str) -> None:
+def render_queue_items(items, key_prefix: str) -> None:
     for post_id, review_text, category in items:
         user_id = DEMO_QUEUE_USER_IDS[post_id]
-        risk_score = DEMO_QUEUE_RISK_SCORES[post_id]
+        risk_score = cached_queue_risk_score(
+            review_text, alpha, topk, strong_boost
+        )
+        # Derive the badge from the same score + thresholds used in the
+        # Moderation panel, so the queue card never disagrees with the
+        # detail view once a moderator opens it.
+        display_tier = apply_thresholds(risk_score, high_cut, med_cut).title()
         selection_state = (
             "selected"
             if st.session_state.get("current_post_id") == post_id
@@ -290,7 +335,7 @@ def render_queue_items(items, key_prefix: str, risk_group: str) -> None:
         with st.container(
             key=(
                 f"{key_prefix}_queue_{selection_state}_"
-                f"risk_{risk_group.lower()}_{post_id}"
+                f"risk_{display_tier.lower()}_{post_id}"
             )
         ):
             st.button(
@@ -299,7 +344,7 @@ def render_queue_items(items, key_prefix: str, risk_group: str) -> None:
                     review_text,
                     category,
                     user_id,
-                    risk_group,
+                    display_tier,
                     risk_score,
                 ),
                 key=f"{key_prefix}_{post_id}",
@@ -319,16 +364,15 @@ def render_queue_panel(key_prefix: str) -> None:
                 f"{risk_group} ({len(items)})",
                 expanded=risk_group == "High",
             ):
-                render_queue_items(items, f"{key_prefix}_all", risk_group)
+                render_queue_items(items, f"{key_prefix}_all")
     with passed_tab:
-        render_queue_items(DEMO_QUEUE["Low"], f"{key_prefix}_passed", "Low")
+        render_queue_items(DEMO_QUEUE["Low"], f"{key_prefix}_passed")
     with flagged_tab:
-        render_queue_items(DEMO_QUEUE["High"], f"{key_prefix}_flagged", "High")
+        render_queue_items(DEMO_QUEUE["High"], f"{key_prefix}_flagged")
     with escalated_tab:
         render_queue_items(
             DEMO_QUEUE["Medium"],
             f"{key_prefix}_escalated",
-            "Medium",
         )
 
 
@@ -881,45 +925,11 @@ with moderation_tab:
     if st.session_state.pop("analysis_requested", False):
         review_text = st.session_state["review_text"]
         with st.spinner("Analyzing policy signals and similar cases…"):
-            used_fallback = False
-            if nbr is not None:
-                try:
-                    neighbor_conf, neighbors = nbr.search(review_text, k=topk)
-                except Exception:
-                    neighbor_conf, neighbors = 0.0, []
-                    used_fallback = True
-            else:
-                neighbor_conf, neighbors = 0.0, []
-                used_fallback = True
-
-            result = engine.decide(review_text, neighbor_conf=neighbor_conf)
-
-            if strong_boost and upgrade_on_strong_evidence(
-                result.get("rules_detail", [])
-            ):
-                rule_score = min(
-                    sum(rule.get("score", 0) for rule in result["rules_detail"]),
-                    1.0,
-                )
-                triggered_count = sum(
-                    1
-                    for rule in result["rules_detail"]
-                    if rule.get("score", 0) > 0
-                )
-
-                weighted_score = (
-                    engine.alpha * rule_score
-                    + engine.beta * neighbor_conf
-                )
-
-                multi_signal_boost = 0.10 * max(0, triggered_count - 1)
-
-                final_score = min(
-                    0.95,
-                    weighted_score + multi_signal_boost,
-                )
-                result["rule_score"] = round(rule_score, 3)
-                result["final_score"] = round(final_score, 3)
+            analysis = analyze_review_text(review_text)
+            result = analysis["result"]
+            neighbor_conf = analysis["neighbor_conf"]
+            neighbors = analysis["neighbors"]
+            used_fallback = analysis["used_fallback"]
 
             similar_cases = []
             for position, (similarity, index) in enumerate(
