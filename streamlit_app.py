@@ -1082,7 +1082,7 @@ with moderation_tab:
                 )
 
             result_heading, scoring_control = st.columns(
-                [0.58, 0.42],
+                [0.68, 0.32],
                 vertical_alignment="center",
             )
             with result_heading:
@@ -1090,6 +1090,7 @@ with moderation_tab:
             with scoring_control:
                 with st.popover(
                     "How scoring works",
+                    icon=":material/help:",
                     use_container_width=True,
                 ):
                     matched_signal_count = sum(
