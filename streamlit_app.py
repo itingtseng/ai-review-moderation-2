@@ -611,6 +611,28 @@ st.markdown(
         }
     }
 
+    div[class*="st-key-simcase_feedback_container_"] {
+        margin-top: 0.35rem;
+        margin-bottom: 1rem;
+        padding: 0 0.15rem;
+    }
+
+    div[class*="st-key-simcase_feedback_container_"]
+        div[data-testid="stHorizontalBlock"] {
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    div[class*="st-key-simcase_feedback_container_"]
+        [data-testid="stCaptionContainer"] {
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    div[class*="st-key-simcase_feedback_container_"] button {
+        padding: 0.15rem 0.55rem;
+    }
+
     /* Active tabs */
     button[data-baseweb="tab"][aria-selected="true"],
     button[data-baseweb="tab"][aria-selected="true"] p {
@@ -1243,7 +1265,7 @@ with moderation_tab:
                 risk_score_pct = max(0.0, min(float(risk_score), 1.0)) * 100
                 decision = item["past_decision"]
                 decision_class = decision.lower()
-                expanded = " open" if case_number == 1 else ""
+                expanded = " open"
                 policy_category = html.escape(str(item["policy_category"]))
                 case_text = str(item["text"])
                 case_rule_result = engine.decide(
@@ -1311,6 +1333,39 @@ with moderation_tab:
                     unsafe_allow_html=True,
                 )
 
+                feedback_key = f"simcase_feedback_{case_number}_{item['case_id']}"
+                current_feedback = st.session_state.get(feedback_key)
+                with st.container(
+                    key=f"simcase_feedback_container_{case_number}"
+                ):
+                    spacer_col, label_col, up_col, down_col = st.columns(
+                        [5.5, 2.2, 0.5, 0.5], gap="small"
+                    )
+                    with label_col:
+                        st.caption("Is this case helpful?")
+                    with up_col:
+                        if st.button(
+                            "👍",
+                            key=f"{feedback_key}_up",
+                            type="primary" if current_feedback == "up" else "secondary",
+                            help="Yes, this case was helpful",
+                        ):
+                            st.session_state[feedback_key] = (
+                                None if current_feedback == "up" else "up"
+                            )
+                            st.rerun()
+                    with down_col:
+                        if st.button(
+                            "👎",
+                            key=f"{feedback_key}_down",
+                            type="primary" if current_feedback == "down" else "secondary",
+                            help="No, this case was not helpful",
+                        ):
+                            st.session_state[feedback_key] = (
+                                None if current_feedback == "down" else "down"
+                            )
+                            st.rerun()
+
     with queue_column:
         st.header("Moderation Queue")
         st.caption(
@@ -1329,22 +1384,66 @@ with queue_tab:
 
 with analytics_tab:
     st.header("Analytics")
-    metric_1, metric_2, metric_3, metric_4 = st.columns(4)
-    metric_1.metric("Reviewed today", "128", "+12%")
-    metric_2.metric("Escalation rate", "8%", "-2%")
-    metric_3.metric("Median review time", "42 sec", "-6 sec")
-    metric_4.metric("Inter-moderator agreement", "0.81 κ", "+0.04")
+
+    row1_col1, row1_col2, row1_col3 = st.columns(3)
+    row1_col1.metric("Reviewed today", "128", "+12%")
+    row1_col2.metric("Escalation rate", "8%", "-2%")
+    row1_col3.metric("Median review time", "42 sec", "-6 sec")
+
+    simcase_feedback_votes = [
+        value
+        for key, value in st.session_state.items()
+        if key.startswith("simcase_feedback_") and value in ("up", "down")
+    ]
+    total_votes = len(simcase_feedback_votes)
+    helpful_votes = simcase_feedback_votes.count("up")
+    if total_votes:
+        helpfulness_value = f"{helpful_votes / total_votes:.0%}"
+        helpfulness_delta = f"{total_votes} rated this session"
+    else:
+        helpfulness_value = "No ratings yet"
+        helpfulness_delta = None
+
+    row2_col1, row2_col2, row2_col3 = st.columns(3)
+    row2_col1.metric("Inter-moderator agreement", "0.81 κ", "+0.04")
+    row2_col2.metric(
+        "Helpfulness of similar cases", helpfulness_value, helpfulness_delta
+    )
+    row2_col3.metric("Risk-score calibration", "94%", "+1.5%")
+
     st.caption(
         "Inter-moderator agreement is Cohen's kappa across paired review cases "
         "where two moderators independently decided pass, flag, or escalate."
     )
-    st.caption("Synthetic metrics for navigation and workflow context.")
+    st.caption(
+        "Helpfulness of similar cases is the share of 👍 votes among this "
+        "session's “Is this case helpful?” feedback under Similar Cases."
+    )
+    st.caption(
+        "Risk-score calibration compares predicted risk buckets against actual "
+        "past outcomes; higher means predicted risk more closely tracks reality."
+    )
+    st.caption(
+        "Reviewed today, escalation rate, median review time, and risk-score "
+        "calibration are synthetic metrics for navigation and workflow context."
+    )
 
 
 with settings_tab:
     st.header("Settings")
-    st.toggle("Require human approval for high-risk cases", value=True)
-    st.toggle("Show similar-case evidence", value=True)
+    st.caption("Enable only if you have a FastAPI server running (e.g., locally).")
+    use_fastapi_similar = st.checkbox(
+        "Use FastAPI /similar (optional)",
+        value=False,
+        help="If off, the app won't call /similar",
+    )
+    st.text_input(
+        "FastAPI base URL",
+        value="http://127.0.0.1:8010",
+        help="Example: http://127.0.0.1:8010",
+        disabled=not use_fastapi_similar,
+    )
+    st.checkbox("Show raw JSON", value=False)
     st.selectbox("Default queue", ["All reviews", "High priority", "Assigned to me"])
     st.caption("Demo-only settings; no production configuration is changed.")
 
