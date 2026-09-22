@@ -1385,23 +1385,21 @@ with queue_tab:
 with analytics_tab:
     st.header("Analytics")
 
-    synthetic_metric_note = (
-        "Reviewed today, escalation rate, median review time, and risk-score "
-        "calibration are synthetic metrics for navigation and workflow context."
-    )
+    def synthetic_metric_help(name: str) -> str:
+        return f"{name} is a synthetic metric for navigation and workflow context."
 
     row1_col1, row1_col2, row1_col3 = st.columns(3)
     row1_col1.metric(
         "Reviewed today", "128", "+12%",
-        help=f"Reviewed today: {synthetic_metric_note}",
+        help=synthetic_metric_help("Reviewed today"),
     )
     row1_col2.metric(
         "Escalation rate", "8%", "-2%",
-        help=f"Escalation rate: {synthetic_metric_note}",
+        help=synthetic_metric_help("Escalation rate"),
     )
     row1_col3.metric(
         "Median review time", "42 sec", "-6 sec",
-        help=f"Median review time: {synthetic_metric_note}",
+        help=synthetic_metric_help("Median review time"),
     )
 
     simcase_feedback_votes = [
@@ -1445,7 +1443,8 @@ with analytics_tab:
         help=(
             "Risk-score calibration compares predicted risk buckets against "
             "actual past outcomes; higher means predicted risk more closely "
-            "tracks reality. " + synthetic_metric_note
+            "tracks reality. "
+            + synthetic_metric_help("Risk-score calibration")
         ),
     )
 
