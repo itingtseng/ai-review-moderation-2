@@ -1329,10 +1329,15 @@ with queue_tab:
 
 with analytics_tab:
     st.header("Analytics")
-    metric_1, metric_2, metric_3 = st.columns(3)
+    metric_1, metric_2, metric_3, metric_4 = st.columns(4)
     metric_1.metric("Reviewed today", "128", "+12%")
     metric_2.metric("Escalation rate", "8%", "-2%")
     metric_3.metric("Median review time", "42 sec", "-6 sec")
+    metric_4.metric("Inter-moderator agreement", "0.81 κ", "+0.04")
+    st.caption(
+        "Inter-moderator agreement is Cohen's kappa across paired review cases "
+        "where two moderators independently decided pass, flag, or escalate."
+    )
     st.caption("Synthetic metrics for navigation and workflow context.")
 
 
