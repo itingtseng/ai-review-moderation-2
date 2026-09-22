@@ -874,32 +874,20 @@ st.markdown(
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
       > div[data-testid="stColumn"]:nth-child(1) button {
         border-color: #dc2626 !important;
-        background: #dc2626 !important;
-        color: #ffffff !important;
-    }
-    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
-      > div[data-testid="stColumn"]:nth-child(1) button p {
-        color: #ffffff !important;
+        color: inherit !important;
+        background: transparent !important;
     }
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
       > div[data-testid="stColumn"]:nth-child(2) button {
         border-color: #d69e00 !important;
-        background: #d69e00 !important;
-        color: #ffffff !important;
-    }
-    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
-      > div[data-testid="stColumn"]:nth-child(2) button p {
-        color: #ffffff !important;
+        color: inherit !important;
+        background: transparent !important;
     }
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
       > div[data-testid="stColumn"]:nth-child(3) button {
         border-color: #16a34a !important;
-        background: #16a34a !important;
-        color: #ffffff !important;
-    }
-    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
-      > div[data-testid="stColumn"]:nth-child(3) button p {
-        color: #ffffff !important;
+        color: inherit !important;
+        background: transparent !important;
     }
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
       > div[data-testid="stColumn"]:nth-child(4) button {
@@ -910,32 +898,32 @@ st.markdown(
 
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
       > div[data-testid="stColumn"]:nth-child(1) button:hover {
-        background: #b91c1c !important;
-        border-color: #b91c1c !important;
+        color: #dc2626 !important;
+        background: rgba(220, 38, 38, 0.2) !important;
     }
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
       > div[data-testid="stColumn"]:nth-child(1) button:hover p {
-        color: #ffffff !important;
+        color: #dc2626 !important;
     }
 
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
       > div[data-testid="stColumn"]:nth-child(2) button:hover {
-        background: #b07d00 !important;
-        border-color: #b07d00 !important;
+        color: #d69e00 !important;
+        background: rgba(214, 158, 0, 0.2) !important;
     }
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
       > div[data-testid="stColumn"]:nth-child(2) button:hover p {
-        color: #ffffff !important;
+        color: #d69e00 !important;
     }
 
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
       > div[data-testid="stColumn"]:nth-child(3) button:hover {
-        background: #12833c !important;
-        border-color: #12833c !important;
+        color: #16a34a !important;
+        background: rgba(22, 163, 74, 0.2) !important;
     }
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
       > div[data-testid="stColumn"]:nth-child(3) button:hover p {
-        color: #ffffff !important;
+        color: #16a34a !important;
     }
 
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
@@ -946,6 +934,65 @@ st.markdown(
     .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
       > div[data-testid="stColumn"]:nth-child(4) button:hover p {
         color: #2563eb !important;
+    }
+
+    /* Once a decision is recorded for the open review, its button (and
+       only that one) switches to a solid fill to show what was chosen. */
+    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
+      > div[data-testid="stColumn"]:nth-child(1) button[kind="primary"] {
+        background: #dc2626 !important;
+        color: #ffffff !important;
+    }
+    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
+      > div[data-testid="stColumn"]:nth-child(1) button[kind="primary"] p {
+        color: #ffffff !important;
+    }
+    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
+      > div[data-testid="stColumn"]:nth-child(1) button[kind="primary"]:hover {
+        background: #b91c1c !important;
+        border-color: #b91c1c !important;
+    }
+    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
+      > div[data-testid="stColumn"]:nth-child(1) button[kind="primary"]:hover p {
+        color: #ffffff !important;
+    }
+
+    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
+      > div[data-testid="stColumn"]:nth-child(2) button[kind="primary"] {
+        background: #d69e00 !important;
+        color: #ffffff !important;
+    }
+    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
+      > div[data-testid="stColumn"]:nth-child(2) button[kind="primary"] p {
+        color: #ffffff !important;
+    }
+    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
+      > div[data-testid="stColumn"]:nth-child(2) button[kind="primary"]:hover {
+        background: #b07d00 !important;
+        border-color: #b07d00 !important;
+    }
+    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
+      > div[data-testid="stColumn"]:nth-child(2) button[kind="primary"]:hover p {
+        color: #ffffff !important;
+    }
+
+    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
+      > div[data-testid="stColumn"]:nth-child(3) button[kind="primary"] {
+        background: #16a34a !important;
+        color: #ffffff !important;
+    }
+    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
+      > div[data-testid="stColumn"]:nth-child(3) button[kind="primary"] p {
+        color: #ffffff !important;
+    }
+    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
+      > div[data-testid="stColumn"]:nth-child(3) button[kind="primary"]:hover {
+        background: #12833c !important;
+        border-color: #12833c !important;
+    }
+    .st-key-moderator_actions div[data-testid="stHorizontalBlock"]
+      > div[data-testid="stColumn"]:nth-child(3) button[kind="primary"]:hover p {
+        color: #ffffff !important;
     }
     </style>
     """,
@@ -1120,6 +1167,9 @@ with moderation_tab:
 
 
 
+            current_decision = st.session_state.get("queue_decisions", {}).get(
+                st.session_state.get("current_post_id")
+            )
             with st.container(key="moderator_actions"):
                 action_1, action_2, action_3, action_4 = st.columns(4)
                 with action_1:
@@ -1127,6 +1177,7 @@ with moderation_tab:
                         "Flag",
                         key="current_flag",
                         use_container_width=True,
+                        type="primary" if current_decision == "Flagged" else "secondary",
                         on_click=record_moderator_decision,
                         args=("Flagged",),
                     )
@@ -1135,6 +1186,7 @@ with moderation_tab:
                         "Escalate",
                         key="current_escalate",
                         use_container_width=True,
+                        type="primary" if current_decision == "Escalated" else "secondary",
                         on_click=record_moderator_decision,
                         args=("Escalated",),
                     )
@@ -1143,6 +1195,7 @@ with moderation_tab:
                         "Approve",
                         key="current_approve",
                         use_container_width=True,
+                        type="primary" if current_decision == "Approved" else "secondary",
                         on_click=record_moderator_decision,
                         args=("Approved",),
                     )
