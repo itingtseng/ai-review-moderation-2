@@ -135,7 +135,7 @@ class RuleEngine:
             weighted_score + multi_signal_boost,
         )
         final_score = max(rule_score, weighted_score)
-        if final_score <= 0.70:
+        if final_score >= 0.70:
             risk = "HIGH"
         elif final_score >= 0.40:
             risk = "MEDIUM"
