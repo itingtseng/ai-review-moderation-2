@@ -45,38 +45,9 @@ DEMO_QUEUE_USER_IDS = {
     "3310": "90521",
     "2048": "72618",
 }
-HISTORICAL_CASE_METADATA = [
-    {
-        "case_id": "0548",
-        "user_id": "23817",
-        "risk_level": "HIGH",
-        "risk_score": 0.87,
-    },
-    {
-        "case_id": "1286",
-        "user_id": "54102",
-        "risk_level": "HIGH",
-        "risk_score": 0.79,
-    },
-    {
-        "case_id": "2471",
-        "user_id": "39584",
-        "risk_level": "MEDIUM",
-        "risk_score": 0.62,
-    },
-    {
-        "case_id": "3094",
-        "user_id": "76031",
-        "risk_level": "MEDIUM",
-        "risk_score": 0.55,
-    },
-    {
-        "case_id": "4820",
-        "user_id": "91426",
-        "risk_level": "LOW",
-        "risk_score": 0.28,
-    },
-]
+# Illustrative decision labels for similar cases. The sample corpus has no
+# verified moderation outcomes, so the label is derived from each case's own
+# live risk tier and is always shown as illustrative.
 PAST_DECISION_BY_RISK = {
     "HIGH": "Flag",
     "MEDIUM": "Escalate",
@@ -748,6 +719,15 @@ st.markdown(
         background-color: #2563eb !important;
     }
 
+    /* One-line product intro on the Moderation tab */
+    .verdict-intro {
+        margin: 0 0 0.25rem;
+        text-wrap: pretty;
+        color: #4b5563;
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
     /* Product header */
     .verdict-header {
         min-height: 88px;
@@ -1030,6 +1010,11 @@ moderation_tab, queue_tab, analytics_tab, settings_tab = st.tabs(
 
 
 with moderation_tab:
+    st.markdown(
+        '<p class="verdict-intro">Explainable moderation with matched rules '
+        "and similar cases. Scores are heuristic; demo data is synthetic.</p>",
+        unsafe_allow_html=True,
+    )
     if not data_ok:
         st.warning(
             "Similar-case evidence is temporarily unavailable. "
@@ -1051,29 +1036,25 @@ with moderation_tab:
             used_fallback = analysis["used_fallback"]
 
             similar_cases = []
-            for position, (similarity, index) in enumerate(
-                list(neighbors)[:MAX_VISIBLE_CASES]
-            ):
+            for similarity, index in list(neighbors)[:MAX_VISIBLE_CASES]:
                 row = nbr.df.iloc[index] if nbr is not None else {}
                 try:
                     reason_id = int(row.get("vote_reason_id", -1))
                 except (TypeError, ValueError):
                     reason_id = -1
-                historical_metadata = HISTORICAL_CASE_METADATA[position]
-                historical_risk = historical_metadata["risk_level"]
+                # IDs are keyed to the sample row, so the same text always
+                # carries the same case ID. Both IDs are synthetic.
+                row_number = int(index) + 1
                 similar_cases.append(
                     {
-                        "case_id": historical_metadata["case_id"],
-                        "user_id": historical_metadata["user_id"],
-                        "risk_level": historical_risk,
-                        "risk_score": historical_metadata["risk_score"],
+                        "case_id": f"{row_number:04d}",
+                        "user_id": f"{10000 + (row_number * 7919) % 90000:05d}",
                         "similarity": round(float(similarity), 3),
                         "text": row.get("review_text", ""),
                         "policy_category": POLICY_LABELS.get(
                             reason_id,
                             "Other policy category",
                         ),
-                        "past_decision": PAST_DECISION_BY_RISK[historical_risk],
                     }
                 )
 
@@ -1365,9 +1346,8 @@ with moderation_tab:
 
             st.subheader("Similar Cases")
             st.caption(
-                "Five closest cases are shown. Similarity is one reference signal; "
-                "moderators can also inspect the content, policy category, historical "
-                "risk level, and past decision."
+                "Five closest sample reviews, scored with the same rules. "
+                "Decision labels are illustrative, not real outcomes."
             )
             similar_cases = st.session_state.get("similar_cases", [])
             if not similar_cases:
@@ -1375,29 +1355,29 @@ with moderation_tab:
                     "Similar cases are unavailable for this analysis. "
                     "Use Retry to search again."
                 )
-            fallback_risk_scores = {"HIGH": 0.82, "MEDIUM": 0.58, "LOW": 0.28}
             case_medium_pct = max(0.0, min(float(med_cut), 1.0)) * 100
             case_high_pct = max(
                 case_medium_pct,
                 min(float(high_cut), 1.0) * 100,
             )
             for case_number, item in enumerate(similar_cases, start=1):
-                risk_level = item["risk_level"]
+                case_text = str(item["text"])
+                # Score each case with the same pipeline and thresholds as the
+                # current review, so an identical text gets an identical tier.
+                risk_score = cached_queue_risk_score(
+                    case_text, alpha, topk, strong_boost
+                )
+                risk_level = apply_thresholds(risk_score, high_cut, med_cut)
                 risk_color = {
                     "HIGH": "#c62828",
                     "MEDIUM": "#b77900",
                     "LOW": "#2e7d32",
                 }[risk_level]
-                risk_score = item.get(
-                    "risk_score",
-                    fallback_risk_scores[risk_level],
-                )
                 risk_score_pct = max(0.0, min(float(risk_score), 1.0)) * 100
-                decision = item["past_decision"]
+                decision = PAST_DECISION_BY_RISK[risk_level]
                 decision_class = decision.lower()
                 expanded = " open"
                 policy_category = html.escape(str(item["policy_category"]))
-                case_text = str(item["text"])
                 case_rule_result = engine.decide(
                     case_text,
                     neighbor_conf=0.0,
@@ -1416,8 +1396,9 @@ with moderation_tab:
                                 <span class="similar-case-chevron">⌄</span>
                                 <span>{item['similarity']:.0%} {policy_category}</span>
                             </span>
-                            <span class="similar-case-decision {decision_class}">
-                                {decision}
+                            <span class="similar-case-decision {decision_class}"
+                                  title="Illustrative label, not a real moderation outcome">
+                                Illustrative: {decision}
                             </span>
                         </summary>
                         <div class="similar-case-body">
@@ -1455,7 +1436,7 @@ with moderation_tab:
                             </div>
                             <div class="similar-case-review">{review_content}</div>
                             <div class="similar-case-meta">
-                                Case ID: {case_id} | User ID: {user_id}
+                                Sample case ID: {case_id} | Synthetic user ID: {user_id}
                             </div>
                         </div>
                     </details>
@@ -1514,21 +1495,32 @@ with queue_tab:
 
 with analytics_tab:
     st.header("Analytics")
+    st.info(
+        "**Illustrative demo values, not measured.** These numbers are fixed "
+        "examples of what a production dashboard would track. Helpfulness "
+        "switches to real counts once you rate a similar case as helpful or "
+        "not helpful. "
+        "No accuracy, agreement, or calibration has been measured for this "
+        "prototype.",
+        icon=":material/info:",
+    )
 
     def synthetic_metric_help(name: str) -> str:
-        return f"{name} is a synthetic metric for navigation and workflow context."
+        return (
+            f"{name} is an illustrative demo value, not a measured result."
+        )
 
     row1_col1, row1_col2, row1_col3 = st.columns(3)
     row1_col1.metric(
-        "Reviewed today", "128", "+12%",
+        "Reviewed today (illustrative)", "128", "+12%",
         help=synthetic_metric_help("Reviewed today"),
     )
     row1_col2.metric(
-        "Escalation rate", "8%", "-2%",
+        "Escalation rate (illustrative)", "8%", "-2%",
         help=synthetic_metric_help("Escalation rate"),
     )
     row1_col3.metric(
-        "Median review time", "42 sec", "-6 sec",
+        "Median review time (illustrative)", "42 sec", "-6 sec",
         help=synthetic_metric_help("Median review time"),
     )
 
@@ -1542,23 +1534,26 @@ with analytics_tab:
     if total_votes:
         helpfulness_value = f"{helpful_votes / total_votes:.0%}"
         helpfulness_delta = f"{total_votes} rated this session"
+        helpfulness_source = "this session"
     else:
         helpfulness_value = "76%"
         helpfulness_delta = "+4%"
+        helpfulness_source = "illustrative until you rate a case"
 
     row2_col1, row2_col2, row2_col3 = st.columns(3)
     row2_col1.metric(
-        "Inter-moderator agreement",
+        "Inter-moderator agreement (illustrative)",
         "0.81 κ",
         "+0.04",
         help=(
-            "Inter-moderator agreement is Cohen's kappa across paired review "
-            "cases where two moderators independently decided pass, flag, "
-            "or escalate."
+            "Inter-moderator agreement would be Cohen's kappa across paired "
+            "review cases where two moderators independently decided pass, "
+            "flag, or escalate. "
+            + synthetic_metric_help("Inter-moderator agreement")
         ),
     )
     row2_col2.metric(
-        "Helpfulness of similar cases",
+        f"Helpfulness of similar cases ({helpfulness_source})",
         helpfulness_value,
         helpfulness_delta,
         help=(
@@ -1567,13 +1562,13 @@ with analytics_tab:
         ),
     )
     row2_col3.metric(
-        "Risk-score calibration",
+        "Risk-score calibration (illustrative)",
         "94%",
         "+1.5%",
         help=(
-            "Risk-score calibration compares predicted risk buckets against "
-            "actual past outcomes; higher means predicted risk more closely "
-            "tracks reality. "
+            "Risk-score calibration would compare predicted risk buckets "
+            "against actual past outcomes; higher would mean predicted risk "
+            "more closely tracks reality. "
             + synthetic_metric_help("Risk-score calibration")
         ),
     )
