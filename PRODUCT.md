@@ -48,7 +48,7 @@ Explainable, not a black box. Every result shows the policy signals, matched phr
 ## Evidence on Hand
 
 - `data/samples/sample_reviews.csv`: 20 illustrative reviews used for demo retrieval. They are not a representative or verified set.
-- Queue, analytics, historical-outcome and moderator metadata are **synthetic**. The past decisions shown on similar-case cards are not verified outcomes.
+- Queue, analytics, historical-outcome and moderator metadata are **synthetic**. Similar-case cards deliberately show no past decision or risk tier; their policy category is an unverified sample annotation.
 - No validated accuracy, precision, recall, F1, latency or retrieval-quality results exist. Do not fabricate metrics, customers, testimonials or production claims.
 - The original source corpus was removed for provenance reasons. Do not restore it.
 
