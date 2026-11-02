@@ -45,3 +45,6 @@ logs/
 # Exclude private experimental dataset derivatives
 data/labeled/
 data/debug/
+
+# Playwright MCP screenshots and snapshots
+.playwright-mcp/
