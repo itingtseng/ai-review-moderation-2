@@ -140,6 +140,7 @@ def record_moderator_decision(decision: str) -> None:
     if post_id:
         decisions = st.session_state.setdefault("queue_decisions", {})
         decisions[post_id] = decision
+        st.session_state["decision_notice"] = f"{decision} review {post_id}"
     advance_to_next_pending_review()
 
 
@@ -1010,6 +1011,9 @@ moderation_tab, queue_tab, analytics_tab, settings_tab = st.tabs(
 
 
 with moderation_tab:
+    decision_notice = st.session_state.pop("decision_notice", None)
+    if decision_notice:
+        st.toast(decision_notice, icon=":material/check_circle:")
     st.markdown(
         '<p class="verdict-intro">Explainable moderation with matched rules '
         "and similar cases. Scores are heuristic; demo data is synthetic.</p>",
@@ -1151,15 +1155,19 @@ with moderation_tab:
 
 
 
+            current_post_id = st.session_state.get("current_post_id")
             current_decision = st.session_state.get("queue_decisions", {}).get(
-                st.session_state.get("current_post_id")
+                current_post_id
             )
             with st.container(key="moderator_actions"):
                 action_1, action_2, action_3, action_4 = st.columns(4)
                 with action_1:
                     st.button(
                         "Flag",
-                        key="current_flag",
+                        # Per-review keys give each review fresh buttons, so
+                        # focus from the last decision can't carry over and a
+                        # stray Enter can't decide the next review.
+                        key=f"current_flag_{current_post_id}",
                         use_container_width=True,
                         type="primary" if current_decision == "Flagged" else "secondary",
                         on_click=record_moderator_decision,
@@ -1168,7 +1176,7 @@ with moderation_tab:
                 with action_2:
                     st.button(
                         "Escalate",
-                        key="current_escalate",
+                        key=f"current_escalate_{current_post_id}",
                         use_container_width=True,
                         type="primary" if current_decision == "Escalated" else "secondary",
                         on_click=record_moderator_decision,
@@ -1177,7 +1185,7 @@ with moderation_tab:
                 with action_3:
                     st.button(
                         "Approve",
-                        key="current_approve",
+                        key=f"current_approve_{current_post_id}",
                         use_container_width=True,
                         type="primary" if current_decision == "Approved" else "secondary",
                         on_click=record_moderator_decision,
