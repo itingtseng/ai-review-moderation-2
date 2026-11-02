@@ -104,7 +104,7 @@ For each analyzed review, the interface can show:
 
 The Queue tab demonstrates the intended review workflow. Moderator actions currently update Streamlit session state only; they are not persisted to a database or external case-management system.
 
-The interface uses two different kinds of risk information: the current review receives a heuristic score from policy and similarity signals, while the risk levels and past decisions attached to similar-case cards are synthetic demonstration metadata. Those displayed past decisions are not verified moderation outcomes for the retrieved reviews. Queue and analytics metadata also demonstrate the intended workflow rather than measured operational results.
+The interface uses two different kinds of risk information: the current review receives a heuristic score from policy and similarity signals, while similar-case cards show only similarity, the sample's own policy-category annotation, rule-match highlights and a synthetic case ID. Cards show no risk tier or past decision, because the sample corpus has no verified moderation outcomes; moderators compare the content themselves. Queue and analytics metadata also demonstrate the intended workflow rather than measured operational results.
 
 ## 🧠 Lexicon Exploration
 

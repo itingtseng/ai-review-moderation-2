@@ -1,7 +1,7 @@
 # streamlit_app.py
 # ------------------------------------------------------------
 # AI-assisted review risk assessment
-# - Policy signals + similar historical cases
+# - Policy signals + similar sample cases
 # - Human moderator retains the final decision
 # ------------------------------------------------------------
 
@@ -45,15 +45,6 @@ DEMO_QUEUE_USER_IDS = {
     "3310": "90521",
     "2048": "72618",
 }
-# Illustrative decision labels for similar cases. The sample corpus has no
-# verified moderation outcomes, so the label is derived from each case's own
-# live risk tier and is always shown as illustrative.
-PAST_DECISION_BY_RISK = {
-    "HIGH": "Flag",
-    "MEDIUM": "Escalate",
-    "LOW": "Pass",
-}
-
 DEMO_QUEUE = {
     "High": [
         (
@@ -534,7 +525,7 @@ st.markdown(
         color: #dc2626 !important;
     }
 
-    /* Similar historical case cards */
+    /* Similar sample case cards */
     .similar-case-card {
         margin-bottom: 0.75rem;
         overflow: hidden;
@@ -579,30 +570,6 @@ st.markdown(
         transform: rotate(180deg);
     }
 
-    .similar-case-decision {
-        flex-shrink: 0;
-        padding: 0.22rem 0.6rem;
-        border-radius: 999px;
-        font-size: 0.8rem;
-        font-weight: 700;
-        line-height: 1.3;
-    }
-
-    .similar-case-decision.flag {
-        color: #dc2626;
-        background: #fee2e2;
-    }
-
-    .similar-case-decision.escalate {
-        color: #b77900;
-        background: #fef3c7;
-    }
-
-    .similar-case-decision.pass {
-        color: #15803d;
-        background: #dcfce7;
-    }
-
     .similar-case-body {
         padding: 0 1rem 1rem;
         border-top: 1px solid #eef0f3;
@@ -621,70 +588,6 @@ st.markdown(
     .similar-case-meta {
         color: #6b7280;
         font-size: 0.78rem;
-    }
-
-    .similar-case-risk-row {
-        display: grid;
-        grid-template-columns: auto minmax(0, 1fr);
-        align-items: center;
-        gap: 1rem;
-        margin: 0.85rem 0 0.55rem;
-    }
-
-    .similar-case-risk-summary {
-        display: flex;
-        align-items: center;
-        gap: 0.65rem;
-    }
-
-    .similar-case-risk-label {
-        padding: 0.25rem 0.65rem;
-        border-radius: 999px;
-        color: white;
-        font-size: 0.9rem;
-        font-weight: 700;
-        line-height: 1.3;
-    }
-
-    .similar-case-risk-score {
-        color: #31333f;
-        font-size: 1.25rem;
-        font-weight: 700;
-    }
-
-    .similar-case-risk-scale {
-        min-width: 0;
-    }
-
-    .similar-case-risk-track {
-        position: relative;
-        height: 10px;
-        border-radius: 999px;
-    }
-
-    .similar-case-risk-marker {
-        position: absolute;
-        top: -4px;
-        width: 12px;
-        height: 12px;
-        border: 3px solid #111827;
-        border-radius: 50%;
-        background: white;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    }
-
-    .similar-case-risk-labels {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 0.3rem;
-        color: #9ca3af;
-        font-size: 0.72rem;
-    }
-
-    @media (max-width: 720px) {
-        .similar-case-risk-row {
-            grid-template-columns: 1fr;
-        }
     }
 
     div[class*="st-key-simcase_feedback_container_"] {
@@ -1047,12 +950,11 @@ with moderation_tab:
                 except (TypeError, ValueError):
                     reason_id = -1
                 # IDs are keyed to the sample row, so the same text always
-                # carries the same case ID. Both IDs are synthetic.
+                # carries the same case ID. The ID is synthetic.
                 row_number = int(index) + 1
                 similar_cases.append(
                     {
                         "case_id": f"{row_number:04d}",
-                        "user_id": f"{10000 + (row_number * 7919) % 90000:05d}",
                         "similarity": round(float(similarity), 3),
                         "text": row.get("review_text", ""),
                         "policy_category": POLICY_LABELS.get(
@@ -1110,7 +1012,7 @@ with moderation_tab:
                     key="strong_evidence",
                 )
                 st.slider(
-                    "Historical cases to compare",
+                    "Sample cases to compare",
                     5,
                     15,
                     step=1,
@@ -1229,7 +1131,7 @@ with moderation_tab:
                     )
                     st.write(
                         f"This review matched {matched_signal_count} policy signals. "
-                        "Similar historical cases provide supporting context, and "
+                        "Similar sample cases provide supporting context, and "
                         "multiple policy matches increase review priority. The score "
                         "supports—but does not make—the moderator's decision."
                     )
@@ -1237,7 +1139,7 @@ with moderation_tab:
                         f"**Policy signals matched:** {matched_signal_count}"
                     )
                     st.write(
-                        f"**Historical context:** {similar_case_count} similar cases found"
+                        f"**Sample context:** {similar_case_count} similar sample cases found"
                     )
                     st.write(
                         f"**Overall risk score:** "
@@ -1254,7 +1156,7 @@ with moderation_tab:
                             f"{policy_contribution * 100:.0f} points"
                         )
                         st.write(
-                            f"Historical cases: {neighbor_conf:.0%} aggregated "
+                            f"Sample cases: {neighbor_conf:.0%} aggregated "
                             f"similarity signal × {result['beta']:.0%} weight = "
                             f"{similarity_contribution * 100:.0f} points"
                         )
@@ -1354,8 +1256,8 @@ with moderation_tab:
 
             st.subheader("Similar Cases")
             st.caption(
-                "Five closest sample reviews, scored with the same rules. "
-                "Decision labels are illustrative, not real outcomes."
+                "Five closest sample reviews. No past outcomes are shown; "
+                "compare the content yourself."
             )
             similar_cases = st.session_state.get("similar_cases", [])
             if not similar_cases:
@@ -1363,28 +1265,8 @@ with moderation_tab:
                     "Similar cases are unavailable for this analysis. "
                     "Use Retry to search again."
                 )
-            case_medium_pct = max(0.0, min(float(med_cut), 1.0)) * 100
-            case_high_pct = max(
-                case_medium_pct,
-                min(float(high_cut), 1.0) * 100,
-            )
             for case_number, item in enumerate(similar_cases, start=1):
                 case_text = str(item["text"])
-                # Score each case with the same pipeline and thresholds as the
-                # current review, so an identical text gets an identical tier.
-                risk_score = cached_queue_risk_score(
-                    case_text, alpha, topk, strong_boost
-                )
-                risk_level = apply_thresholds(risk_score, high_cut, med_cut)
-                risk_color = {
-                    "HIGH": "#c62828",
-                    "MEDIUM": "#b77900",
-                    "LOW": "#2e7d32",
-                }[risk_level]
-                risk_score_pct = max(0.0, min(float(risk_score), 1.0)) * 100
-                decision = PAST_DECISION_BY_RISK[risk_level]
-                decision_class = decision.lower()
-                expanded = " open"
                 policy_category = html.escape(str(item["policy_category"]))
                 case_rule_result = engine.decide(
                     case_text,
@@ -1395,56 +1277,19 @@ with moderation_tab:
                     case_rule_result.get("rules_detail", []),
                 )
                 case_id = html.escape(str(item["case_id"]))
-                user_id = html.escape(str(item["user_id"]))
                 st.markdown(
                     f"""
-                    <details class="similar-case-card"{expanded}>
+                    <details class="similar-case-card" open>
                         <summary>
                             <span class="similar-case-heading">
                                 <span class="similar-case-chevron">⌄</span>
-                                <span>{item['similarity']:.0%} {policy_category}</span>
-                            </span>
-                            <span class="similar-case-decision {decision_class}"
-                                  title="Illustrative label, not a real moderation outcome">
-                                Illustrative: {decision}
+                                <span>{item['similarity']:.0%} similar · Sample label: {policy_category}</span>
                             </span>
                         </summary>
                         <div class="similar-case-body">
-                            <div class="similar-case-risk-row">
-                                <div class="similar-case-risk-summary">
-                                    <span class="similar-case-risk-label"
-                                          style="background:{risk_color};">
-                                        {risk_level.title()}
-                                    </span>
-                                    <span class="similar-case-risk-score">
-                                        {risk_score:.0%}
-                                    </span>
-                                </div>
-                                <div class="similar-case-risk-scale">
-                                    <div class="similar-case-risk-track"
-                                         style="background:linear-gradient(
-                                            90deg,
-                                            #2e7d32 0%,
-                                            #2e7d32 {case_medium_pct}%,
-                                            #f9a825 {case_medium_pct}%,
-                                            #f9a825 {case_high_pct}%,
-                                            #c62828 {case_high_pct}%,
-                                            #c62828 100%);">
-                                        <span class="similar-case-risk-marker"
-                                              style="left:calc(
-                                                {risk_score_pct}% - 6px);">
-                                        </span>
-                                    </div>
-                                    <div class="similar-case-risk-labels">
-                                        <span>Low</span>
-                                        <span>Medium &ge; {case_medium_pct:.0f}%</span>
-                                        <span>High &ge; {case_high_pct:.0f}%</span>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="similar-case-review">{review_content}</div>
                             <div class="similar-case-meta">
-                                Sample case ID: {case_id} | Synthetic user ID: {user_id}
+                                Sample case ID: {case_id}
                             </div>
                         </div>
                     </details>
