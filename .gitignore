@@ -41,3 +41,7 @@ embeddings/
 # Logs
 logs/
 *.log
+
+# Exclude private experimental dataset derivatives
+data/labeled/
+data/debug/

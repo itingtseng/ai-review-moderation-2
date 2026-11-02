@@ -10,7 +10,7 @@ Verdict AI combines deterministic policy rules with semantic similar-case retrie
 
 [Open the Streamlit prototype](https://ai-review-moderation-2-hdqedtqcmlbagcmiewmebt.streamlit.app)
 
-The deployed prototype demonstrates the implemented analysis workflow. Some queue, analytics, historical-outcome, and moderator metadata are synthetic and are included only to demonstrate the intended product experience.
+The prototype demonstrates the analysis workflow using illustrative review examples and synthetic queue, analytics, historical-outcome, and moderator metadata. The current local working copy retains a 20-review demonstration corpus. This local cleanup has not been pushed or redeployed; the deployed copy requires a separate data review.
 
 ## ✨ What the Prototype Demonstrates
 
@@ -104,7 +104,7 @@ For each analyzed review, the interface can show:
 
 The Queue tab demonstrates the intended review workflow. Moderator actions currently update Streamlit session state only; they are not persisted to a database or external case-management system.
 
-Historical decisions, risk labels, analytics, and queue records shown in the interface include synthetic demo metadata. Retrieved review text is selected through semantic search, but the displayed historical outcome is not guaranteed to be the actual moderation outcome of that retrieved record.
+The interface uses two different kinds of risk information: the current review receives a heuristic score from policy and similarity signals, while the risk levels and past decisions attached to similar-case cards are synthetic demonstration metadata. Those displayed past decisions are not verified moderation outcomes for the retrieved reviews. Queue and analytics metadata also demonstrate the intended workflow rather than measured operational results.
 
 ## 🧠 Lexicon Exploration
 
@@ -115,7 +115,7 @@ The notebooks include an experimental workflow for:
 - Log-odds-based phrase ranking
 - Manual inspection of candidate lexicons
 
-Generated candidates are research artifacts. They are **not automatically promoted** into the runtime rule set; production rules still require manual review and inclusion in `app/rules.yml`.
+Generated candidates are research artifacts. They are **not automatically promoted** into the runtime rule set; runtime rules require manual review and inclusion in `app/rules.yml`. The historical source corpus has been removed from this working copy and saved notebook outputs have been cleared. These notebooks preserve the experimental code, but their data-dependent steps cannot be reproduced as provided.
 
 ## 🔧 Tech Stack
 
@@ -148,9 +148,9 @@ No Dify, Coze, LangChain, LangGraph, CrewAI, or AutoGen framework is used in thi
 │   └── streamlit_app.py         # Alternate API-based frontend
 ├── data/
 │   ├── samples/
-│   │   └── sample_reviews.csv   # Small reference corpus used by the demo
-│   ├── labeled/                 # Experimental labeled artifacts
-│   └── debug/                   # Data-quality debugging artifacts
+│   │   └── sample_reviews.csv   # 20 illustrative reviews for demo retrieval
+│   ├── reviews_train.csv        # Header-only experimental placeholder
+│   └── reviews_eval.csv         # Header-only experimental placeholder
 ├── docs/
 │   ├── PRD.md
 │   └── model_card.md
@@ -191,19 +191,15 @@ streamlit run streamlit_app.py
 
 ## 📥 Reference Data
 
-The primary semantic retriever expects a CSV containing:
+The current local demo retrieves from 20 illustrative review examples. This corpus is not a representative evaluation set or a collection of verified policy violations. The primary semantic retriever requires a `review_text` column. The included sample also has a `vote_reason_id` column, but the retriever does not require that column or use it to establish a confirmed moderation outcome.
 
-```text
-review_text,vote_reason_id
-```
-
-By default, it can use:
+The default corpus is:
 
 ```text
 data/samples/sample_reviews.csv
 ```
 
-An alternate corpus path can be supplied through the `DATA_PATH` environment variable. If a usable corpus or embedding model is unavailable, the interface catches the retrieval error and continues with rule evidence.
+An alternate, authorized corpus path can be supplied through the `DATA_PATH` environment variable. The primary app builds its reference index from the configured corpus; it does not train a moderation classifier on the removed labeled files. If a usable corpus or embedding model is unavailable, the interface catches the retrieval error and continues with rule evidence.
 
 ## 🧪 Experimental RAG/LLM Backend
 
@@ -231,7 +227,9 @@ No validated accuracy, precision, recall, F1, latency, or retrieval-quality resu
 
 ## 🔐 Data and Privacy Notice
 
-The sample corpus is intended for demonstration. The repository also contains labeled and debugging artifacts derived during experimentation, including identifiers and review text. Their authorization and redistribution status should be reviewed before the repository or its data is reused, shared, or deployed.
+The current local working copy retains the separate 20-review demonstration corpus. The previous source export and its raw, processed, labeled, and debugging CSV derivatives were removed because their provenance and authorization were not verified. Saved notebook outputs were cleared to remove data previews. This is a precautionary local cleanup, not a determination of the original source or its authorization status.
+
+Do not restore the removed corpus or upload private source exports. Local deletion does not erase prior Git commits, remote repositories, deployed copies, or external backups; those locations require a separate review. Historical experiment results cannot be reproduced from this working copy.
 
 For a public or production release:
 
@@ -276,7 +274,7 @@ Before production use, the system would need:
 | SentenceTransformer + FAISS retrieval | Implemented prototype |
 | Explainability interface | Implemented prototype |
 | Moderator queue and actions | Demo only |
-| Lexicon mining | Experimental notebook workflow |
+| Lexicon mining | Experimental code retained; historical source data removed locally |
 | RAG/LLM backend | Experimental and not connected to the primary app |
 | Statistical performance validation | Not completed |
 | Production moderation infrastructure | Not implemented |

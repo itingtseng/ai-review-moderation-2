@@ -12,7 +12,6 @@ TEXT_COL = "review_text"
 # 預設候選路徑（依序嘗試）
 CANDIDATE_PATHS = [
     os.getenv("DATA_PATH", "").strip(),  # 可用環境變數/Secrets 覆蓋
-    "data/raw/_SELECT_A_object_id_A_complex_id_A_vote_reason_id_B_reason_A_dat_202110291714",
     "data/samples/sample_reviews.csv",   # ← 雲端 fallback
 ]
 
@@ -27,7 +26,7 @@ class NeighborIndex:
             if p and Path(p).exists():
                 return p
         raise FileNotFoundError(
-            "找不到資料檔。請上傳原始資料到 repo，或提供 data/samples/sample_reviews.csv，"
+            "找不到資料檔。請提供經確認可使用的 data/samples/sample_reviews.csv，"
             "也可在環境變數/Secrets 設定 DATA_PATH 指向檔案。"
         )
 
